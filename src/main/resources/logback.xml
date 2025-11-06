@@ -1,0 +1,31 @@
+<configuration>
+    <timestamp key="byDay" datePattern="yyyyMMdd'T'HHmm"/>
+
+    <property name="LOGS" value="./logs"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%magenta(%d{yyyy-MM-dd HH:mm:ss}) %highlight(%-5level) [%blue(%thread)] %yellow(%class %L): %msg%n%throwable
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/polaris.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS}/polaris.log.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%magenta(%d{yyyy-MM-dd HH:mm:ss}) %highlight(%-5level) [%blue(%thread)] %yellow(%class %L): %msg%n%throwable
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
