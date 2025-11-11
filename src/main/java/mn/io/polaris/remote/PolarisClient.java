@@ -13,12 +13,15 @@ import mn.io.polaris.model.polaris.*;
 import mn.io.polaris.model.polaris.request.*;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.polaris.response.LoanAccountResponse;
+import mn.io.polaris.model.polaris.response.LoanAcntListResponse;
 import mn.io.polaris.model.polaris.response.ParameterResponse;
 import mn.io.polaris.model.polaris.response.TempAccount;
 import mn.io.polaris.model.request.*;
+import mn.io.polaris.model.response.LoanAccountBalance;
 import mn.io.polaris.repository.PolarisDaoRepository;
 import mn.io.polaris.repository.SystemDaoRepository;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -84,6 +87,113 @@ public class PolarisClient {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    // region Зээлийн дансны жагсаалт Munkh
+
+    public List<LoanAcntListResponse> getLoanAccountList(GetLoanList getLoanList) {
+        // List<Object> params = new ArrayList<>();
+        List<Object> array = new ArrayList<>();
+        // params.add(getLoanList.getCust());
+        // params.add(getLoanList.getProd());
+        // params.add(getLoanList.getParams());
+        // array.add(params);
+
+        List<Map<String, Object>> filters = new ArrayList<>();
+        for (Map.Entry<GetLoanListCust, Object> entry : getLoanList.getMap().entrySet()) {
+            Map<String, Object> filter = new HashMap<>();
+            filter.put("field", entry.getKey().field);
+            filter.put("operation", entry.getKey().operation);
+            filter.put("type", entry.getKey().type);
+            filter.put("value", entry.getKey().value);
+            filters.add(filter);
+        }
+        for (Map.Entry<GetLoanListParams, Object> entry : getLoanList.getParams().entrySet()) {
+            Map<String, Object> filter = new HashMap<>();
+            filter.put("_iField", entry.getKey()._iField);
+            filter.put("_iOperation", entry.getKey()._iOperation);
+            filter.put("_iType", entry.getKey()._iType);
+            filter.put("_inValues", entry.getKey()._inValues);
+            filters.add(filter);
+        }
+
+        // array.add(getLoanList.getMap());
+        // array.add(getLoanList.getMap2());
+        // array.add(getLoanList.getParams());
+        array.add(filters);
+        array.add(getLoanList.getPageNumber());
+        array.add(getLoanList.getPageSize());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610333");
+
+        JSONArray jsonArray = new JSONArray(array);
+        String json = jsonArray.toString();
+        System.out.println(json); // Output: ["reading","coding"]
+        Gson gson = new Gson();
+        String responseBody = sendRequest(new HttpEntity<>(gson.toJson(array), headers));
+
+        System.out.println(responseBody); // Output: ["reading","coding"]
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+                    mapper.readValue(responseBody, new TypeReference<>() {
+                    })));
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    // endregion
+
+    // region Нээлттэй харилцах дансны жагсаалт Munkh
+
+    public List<Account> getCasaAccountListByStatus(AccountListRequest accountListRequest) {
+        // List<Object> arrayInside = getObjects(accountListRequest);
+        List<Object> arrayInside = new ArrayList<>();
+        GetLoanListCust cust1 = new GetLoanListCust();
+        cust1.setField("CUST_CODE");
+        cust1.setOperation("=");
+        cust1.setType(3);
+        cust1.setValue(accountListRequest.getCustCode());
+        arrayInside.add(cust1);
+
+        GetLoanListCust cust2 = new GetLoanListCust();
+        cust2.setField("ACNT_TYPE");
+        cust2.setOperation("=");
+        cust2.setType(3);
+        cust2.setValue("CA");
+        arrayInside.add(cust2);
+
+        GetLoanListParams para = new GetLoanListParams();
+        para._iField = "STATUS";
+        para._iOperation = "IN";
+        para._iType = 3;
+        para._inValues = Arrays.asList("O", "N");
+        arrayInside.add(para);
+
+        List<Object> array = new ArrayList<>();
+        // Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        // String jsonOutput = gson.toJson(arrayInside);
+        System.out.println(arrayInside);
+        array.add(arrayInside);
+        array.add(accountListRequest.getPageNumber());
+        array.add(accountListRequest.getPageSize());
+        Gson gson = new Gson();
+
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610333");
+        String responseBody = sendRequest(new HttpEntity<>(gson.toJson(array), headers));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    // endregion
 
     public Td getTdInfo(InfoRequest infoRequest) {
         List<Object> array = new ArrayList<>();
@@ -599,6 +709,8 @@ public class PolarisClient {
         return parameterResponseList;
     }
 
+    // region ПОЛАРИС Харилцагчийн дансны жагсаалт /төлөвөөр/
+
     public List<Account> getAccountListByStatus(AccountListRequest accountListRequest) {
         List<Object> arrayInside = getObjects(accountListRequest);
 
@@ -621,6 +733,8 @@ public class PolarisClient {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    // endregion
 
     private static List<Object> getObjects(AccountListRequest accountListRequest) {
         Map<String, Object> firstObject = new HashMap<>();
