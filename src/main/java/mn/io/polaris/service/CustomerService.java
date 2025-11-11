@@ -46,6 +46,17 @@ public class CustomerService {
         }
         return tdOpenList;
     }
+    // region Нээлттэй харилцах дансны жагсаалт Munkh
+
+    public List<Account> getCasaOpenList(@Valid AccountListRequest accountListRequest) {
+        List<Account> accounts = polarisClient.getCasaAccountListByStatus(accountListRequest);
+        List<Account> tdNotOpenList = new ArrayList<>();
+        for (Account a : accounts) {
+            tdNotOpenList.add(a);
+        }
+        return tdNotOpenList;
+    }
+    // endregion
 
     public List<AccountDto> getLoanOpenList(AccountListRequest accountListRequest) {
         List<Account> accounts = polarisClient.getAccountList(accountListRequest);

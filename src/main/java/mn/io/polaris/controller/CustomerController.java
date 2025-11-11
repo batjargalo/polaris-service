@@ -31,6 +31,14 @@ public class CustomerController {
         return customerService.getTdOpenList(accountListRequest);
     }
 
+    // region Нээлттэй харилцах дансны жагсаалт Munkh
+    @PostMapping(path = "/casa/openlist")
+    @Operation(summary = "Нээлттэй хадгаламжийн дансны жагсаалт")
+    public List<Account> getCasaOpenList(@RequestBody @Valid AccountListRequest accountListRequest) {
+        return customerService.getCasaOpenList(accountListRequest);
+    }
+    // endregion
+
     @PostMapping(path = "/td/history")
     @Operation(summary = "Нээлттэй бус хадгаламжийн дансны жагсаалт")
     public List<Account> getTdNotOpenList(@RequestBody @Valid AccountListRequest accountListRequest) {

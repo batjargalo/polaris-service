@@ -146,6 +146,55 @@ public class PolarisClient {
 
     // endregion
 
+    // region Нээлттэй харилцах дансны жагсаалт Munkh
+
+    public List<Account> getCasaAccountListByStatus(AccountListRequest accountListRequest) {
+        // List<Object> arrayInside = getObjects(accountListRequest);
+        List<Object> arrayInside = new ArrayList<>();
+        GetLoanListCust cust1 = new GetLoanListCust();
+        cust1.setField("CUST_CODE");
+        cust1.setOperation("=");
+        cust1.setType(3);
+        cust1.setValue(accountListRequest.getCustCode());
+        arrayInside.add(cust1);
+
+        GetLoanListCust cust2 = new GetLoanListCust();
+        cust2.setField("ACNT_TYPE");
+        cust2.setOperation("=");
+        cust2.setType(3);
+        cust2.setValue("CA");
+        arrayInside.add(cust2);
+
+        GetLoanListParams para = new GetLoanListParams();
+        para._iField = "STATUS";
+        para._iOperation = "IN";
+        para._iType = 3;
+        para._inValues = Arrays.asList("O", "N");
+        arrayInside.add(para);
+
+        List<Object> array = new ArrayList<>();
+        // Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        // String jsonOutput = gson.toJson(arrayInside);
+        System.out.println(arrayInside);
+        array.add(arrayInside);
+        array.add(accountListRequest.getPageNumber());
+        array.add(accountListRequest.getPageSize());
+        Gson gson = new Gson();
+
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610333");
+        String responseBody = sendRequest(new HttpEntity<>(gson.toJson(array), headers));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    // endregion
+
     public Td getTdInfo(InfoRequest infoRequest) {
         List<Object> array = new ArrayList<>();
         array.add(infoRequest.getAcntCode());
