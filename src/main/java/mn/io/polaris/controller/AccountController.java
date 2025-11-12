@@ -32,7 +32,7 @@ public class AccountController {
     // region Casa данс үүсгэх Munkh
 
     @PostMapping(path = "/create/casa")
-    @Operation(summary = "Харилцагчийн данс үүсгэх /Бүх үйлдэл багтсан/")
+    @Operation(summary = "Харилцагчийн CASA данс үүсгэх")
     public AccountNo createCasaAcc(
             @RequestBody @Valid AccountCasaCreatRequest accountCasaCreateRequest) {
         return accountService.createCasaAcc(accountCasaCreateRequest);
