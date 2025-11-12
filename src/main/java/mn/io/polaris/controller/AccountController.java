@@ -23,8 +23,19 @@ public class AccountController {
 
     @PostMapping(path = "/create/all-in-one")
     @Operation(summary = "Харилцагчийн данс үүсгэх /Бүх үйлдэл багтсан/")
-    public AccountNo createAccountAllInOne(@RequestBody @Valid AccountCreateAllInOneRequest accountCreateAllInOneRequest) {
+    public AccountNo createAccountAllInOne(
+            @RequestBody @Valid AccountCreateAllInOneRequest accountCreateAllInOneRequest) {
         return accountService.createAccountAllInOne(accountCreateAllInOneRequest);
     }
+
+    // region Casa данс үүсгэх Munkh
+
+    @PostMapping(path = "/create/casa")
+    @Operation(summary = "Харилцагчийн данс үүсгэх /Бүх үйлдэл багтсан/")
+    public AccountNo createCasaAcc(
+            @RequestBody @Valid AccountCasaCreateRequest accountCasaCreateRequest) {
+        return accountService.createCasaAcc(accountCasaCreateRequest);
+    }
+    // endregion
 
 }

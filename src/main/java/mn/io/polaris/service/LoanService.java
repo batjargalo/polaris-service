@@ -9,6 +9,7 @@ import mn.io.polaris.model.polaris.*;
 import mn.io.polaris.model.polaris.request.*;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.polaris.response.LoanAccountResponse;
+import mn.io.polaris.model.polaris.response.LoanExtendPResponse;
 import mn.io.polaris.model.request.*;
 import mn.io.polaris.model.response.*;
 import mn.io.polaris.remote.PolarisClient;
@@ -446,6 +447,7 @@ public class LoanService {
         loanRequest.setEndDate(createLoanRequest.getEndDate());
         loanRequest.setTermLen(createLoanRequest.getTermLen());
         loanRequest.setRepayAcntCode(createLoanRequest.getRepayAcntCode());
+        loanRequest.setStatus("O");
 
         LoanAccountResponse response = polarisClient.createLoan(loanRequest);
         return response;
@@ -543,5 +545,13 @@ public class LoanService {
         amountDto.setTotalAmount(maxTotalAmount);
         return amountDto;
     }
+
+    // region Нээлттэй харилцах дансны жагсаалт Munkh
+
+    public LoanExtendPResponse extendLoan(@Valid LoanExtensionRequest loanExtensionRequest) {
+        LoanExtendPResponse accounts = polarisClient.extendLoan(loanExtensionRequest);
+        return accounts;
+    }
+    // endregion
 
 }
