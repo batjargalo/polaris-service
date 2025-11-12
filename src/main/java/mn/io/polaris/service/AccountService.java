@@ -110,7 +110,7 @@ public class AccountService {
     }
     // region Casa данс үүсгэх Munkh
 
-    public AccountNo createCasaAcc(AccountCasaCreateRequest accountCasaCreateRequest) {
+    public AccountNo createCasaAcc(AccountCasaCreatRequest accountCasaCreateRequest) {
         AccountCreateRequest accountCreateRequest = new AccountCreateRequest();
         accountCreateRequest.setCustCode(accountCasaCreateRequest.getCustCode());
         accountCreateRequest.setName(accountCasaCreateRequest.getName());

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class AccountCasaCreateRequest {
+public class AccountCasaCreatRequest {
 
     @NotEmpty
     private String custCode;
@@ -14,5 +14,4 @@ public class AccountCasaCreateRequest {
 
     @NotEmpty
     private String name2;
-
 }
