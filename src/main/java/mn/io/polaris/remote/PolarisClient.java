@@ -14,6 +14,7 @@ import mn.io.polaris.model.polaris.request.*;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.polaris.response.LoanAccountResponse;
 import mn.io.polaris.model.polaris.response.LoanAcntListResponse;
+import mn.io.polaris.model.polaris.response.LoanExtendPResponse;
 import mn.io.polaris.model.polaris.response.ParameterResponse;
 import mn.io.polaris.model.polaris.response.TempAccount;
 import mn.io.polaris.model.request.*;
@@ -648,6 +649,67 @@ public class PolarisClient {
         }
         return loanAccountResponse;
     }
+    // endregion
+
+    // region ЗЭЭЛИЙН ХУГАЦАА СУНГАХ ХҮСЭЛТ
+
+    public LoanExtendPResponse extendLoan(LoanExtensionRequest loanExtensionRequest) {
+        LoanExtendPResponse loanExtendPResponse = new LoanExtendPResponse();
+        List<Object> array = new ArrayList<>();
+        // Create a map and use put for key-value pairs
+        Map<String, Object> map = new HashMap<>();
+        map.put("operCode", "13610271");
+        map.put("txnAcntCode", loanExtensionRequest.getAcntCode());
+        map.put("isPreview", 0);
+        map.put("txnDesc", loanExtensionRequest.getTxnDesc());
+        map.put("isPreviewFee", 0);
+        map.put("isTmw", 1);
+        List<Object> aspParam = new ArrayList<>();
+        List<Object> aspParamBody = new ArrayList<>();
+        Map<String, Object> aspParamChild = new HashMap<>();
+        aspParamChild.put("acntCode", loanExtensionRequest.getAcntCode());
+        aspParamChild.put("acntType", "EXPENSE");
+        aspParamBody.add(aspParamChild);
+        aspParam.add(aspParamBody);
+        aspParam.add(13610271);
+        List<Object> addParams = new ArrayList<>();
+        Map<String, Object> addParamChild = new HashMap<>();
+        addParamChild.put("TERMLEN", loanExtensionRequest.getTermLen());
+        addParamChild.put("ENDDATE", loanExtensionRequest.getEndDate());
+        addParams.add(addParamChild);
+        map.put("aspParam", aspParam);
+        map.put("addParams", addParams);
+        map.put("identityType", "");
+        map.put("scrCode", "OI");
+
+        // Add the map to the list
+        array.add(map);
+
+        // array.add(loanExtensionRequest.toJsonString());
+
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610271");
+        Gson gson1 = new Gson();
+        String responseBody = sendRequest(new HttpEntity<>(gson1.toJson(array), headers));
+        // String json = "{" + "\"acntCode\": \" " + responseBody + "}";
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("isSupervisor", extractValue(responseBody));
+        // Serialize to JSON
+        Gson gson = new Gson();
+        String json = gson.toJson(jsonMap);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            loanExtendPResponse = mapper.readValue(
+                    json,
+                    LoanExtendPResponse.class);
+            // loanAccountResponse.setCaAcntCode(extractedId);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return loanExtendPResponse;
+    }
+
     // endregion
 
     public TempAccount getTempAccountInfo(InfoRequest infoRequest) {

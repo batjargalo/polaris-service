@@ -10,6 +10,7 @@ import mn.io.polaris.model.polaris.LoanRepaymentInfo;
 import mn.io.polaris.model.polaris.request.NRSListResponseDto;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.polaris.response.LoanAccountResponse;
+import mn.io.polaris.model.polaris.response.LoanExtendPResponse;
 import mn.io.polaris.model.request.*;
 import mn.io.polaris.model.response.*;
 import mn.io.polaris.service.LoanService;
@@ -85,6 +86,14 @@ public class LoanController {
     @Operation(summary = "Цахим зээл олгох")
     public LoanAccountResponse createLoan(@RequestBody @Valid CreateLoanRequest createLoanRequest) {
         return loanService.createLoan(createLoanRequest);
+    }
+    // endregion
+
+    // region ПОЛАРИСРУУ ЗЭЭЛ ҮҮСГЭХ ХҮСЭЛТ
+    @PostMapping(path = "/extension")
+    @Operation(summary = "Цахим зээл олгох")
+    public LoanExtendPResponse extendLoan(@RequestBody @Valid LoanExtensionRequest loanExtensionRequest) {
+        return loanService.extendLoan(loanExtensionRequest);
     }
     // endregion
 

@@ -55,7 +55,8 @@ public class AccountService {
         accountTdCreateRequest.setStartDate(systemDateFormatted);
         accountTdCreateRequest.setCurCode(Constants.DEFAULT_CUR_CODE);
         Date maturityDate = Utils.addMonthsToDate(systemDateFormatted, accountTdCreateRequest.getTermLen());
-        accountTdCreateRequest.setMaturityDate(Utils.changeDateToString(maturityDate, Constants.DATE_FORMAT_YYYY_MM_DD));
+        accountTdCreateRequest
+                .setMaturityDate(Utils.changeDateToString(maturityDate, Constants.DATE_FORMAT_YYYY_MM_DD));
         accountTdCreateRequest.setSegCode(Constants.CUST_SEG_CODE_RETAIL);
         accountTdCreateRequest.setJointOrSingle(Constants.DEFAULT_SINGLE);
         return polarisClient.createTdAccount(accountTdCreateRequest);
@@ -83,18 +84,20 @@ public class AccountService {
         this.changeAccountStatus(accountNoRequest);
         log.info("Түр дансны төлөв амжилттай солигдсон.");
 
-        AccountTdCreateRequest accountTdCreateRequest = getAccountTdCreateRequest(accountCreateAllInOneRequest, tempAccountNo);
+        AccountTdCreateRequest accountTdCreateRequest = getAccountTdCreateRequest(accountCreateAllInOneRequest,
+                tempAccountNo);
         AccountNo tdAccountNo = this.createTdAccount(accountTdCreateRequest);
         log.info("Хадгаламжийн данс амжилттай үүссэн: " + tdAccountNo.getAcntCode());
 
-//        this.changeTdAccountStatus(tdAccountNo.getAcntCode());
-//        log.info("Хадгаламжийн дансны төлөв амжилттай нээгдсэн.");
+        // this.changeTdAccountStatus(tdAccountNo.getAcntCode());
+        // log.info("Хадгаламжийн дансны төлөв амжилттай нээгдсэн.");
 
         return tdAccountNo;
 
     }
 
-    private static AccountTdCreateRequest getAccountTdCreateRequest(AccountCreateAllInOneRequest accountCreateAllInOneRequest, AccountNo tempAccountNo) {
+    private static AccountTdCreateRequest getAccountTdCreateRequest(
+            AccountCreateAllInOneRequest accountCreateAllInOneRequest, AccountNo tempAccountNo) {
         AccountTdCreateRequest accountTdCreateRequest = new AccountTdCreateRequest();
         accountTdCreateRequest.setCapAcntCode(tempAccountNo.getAcntCode());
         accountTdCreateRequest.setRcvAcntCode(tempAccountNo.getAcntCode());
@@ -105,5 +108,26 @@ public class AccountService {
         accountTdCreateRequest.setProdCode(accountCreateAllInOneRequest.getProdCode());
         return accountTdCreateRequest;
     }
+    // region Casa данс үүсгэх Munkh
+
+    public AccountNo createCasaAcc(AccountCasaCreateRequest accountCasaCreateRequest) {
+        AccountCreateRequest accountCreateRequest = new AccountCreateRequest();
+        accountCreateRequest.setCustCode(accountCasaCreateRequest.getCustCode());
+        accountCreateRequest.setName(accountCasaCreateRequest.getName());
+        accountCreateRequest.setName2(accountCasaCreateRequest.getName2());
+
+        AccountNo tempAccountNo = this.createAccount(accountCreateRequest);
+        log.info("Түр данс амжилттай үүссэн: " + tempAccountNo.getAcntCode());
+
+        AccountNoRequest accountNoRequest = new AccountNoRequest();
+        accountNoRequest.setAcntCode(tempAccountNo.getAcntCode());
+
+        this.changeAccountStatus(accountNoRequest);
+        log.info("Түр дансны төлөв амжилттай солигдсон.");
+
+        return tempAccountNo;
+
+    }
+    // endregion
 
 }
