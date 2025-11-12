@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import mn.io.polaris.model.polaris.AccountNo;
 import mn.io.polaris.model.request.AccountCreateAllInOneRequest;
+import mn.io.polaris.model.request.*;
 import mn.io.polaris.service.AccountService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +34,10 @@ public class AccountController {
     @PostMapping(path = "/create/casa")
     @Operation(summary = "Харилцагчийн данс үүсгэх /Бүх үйлдэл багтсан/")
     public AccountNo createCasaAcc(
-            @RequestBody @Valid AccountCasaCreateRequest accountCasaCreateRequest) {
+            @RequestBody @Valid AccountCasaCreatRequest accountCasaCreateRequest) {
         return accountService.createCasaAcc(accountCasaCreateRequest);
     }
+
     // endregion
 
 }
