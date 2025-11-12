@@ -89,9 +89,19 @@ public class LoanController {
     }
     // endregion
 
+    // region ПОЛАРИСРУУ Зээлийн эргэн төлөлтийн хуваарь үүсгэх
+
+    @PostMapping(path = "/create/repayment")
+    @Operation(summary = "Хур.хүүг дараагийн төлөлтөнд оруулах эсэх чектэйгээр төлбөрийн хуваарь засварлах")
+    public CustomResponseDto createLoanAccountRepayment(@RequestBody @Valid CreateRepaymentRequest dto) {
+        return loanService.createLoanAccountRepayment(dto);
+    }
+
+    // endregion
+
     // region ПОЛАРИСРУУ ЗЭЭЛ ҮҮСГЭХ ХҮСЭЛТ
     @PostMapping(path = "/extension")
-    @Operation(summary = "Цахим зээл олгох")
+    @Operation(summary = "Цахим зээл хугацаа сунгах")
     public LoanExtendPResponse extendLoan(@RequestBody @Valid LoanExtensionRequest loanExtensionRequest) {
         return loanService.extendLoan(loanExtensionRequest);
     }

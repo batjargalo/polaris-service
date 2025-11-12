@@ -299,7 +299,7 @@ public class LoanService {
         return systemDate.replace("\"", "");
     }
 
-    // region ПОЛАРИСРУУ TD ЗЭЭЛ ҮҮСГЭХ
+    // region TD ЗЭЭЛ ҮҮСГЭХ
 
     public DepositTdAccountResponseDto createTdLoan(CreateTdLoanRequestDto createTdLoanRequestDto) {
         String systemDate = polarisClient.getSystemDate();
@@ -426,7 +426,7 @@ public class LoanService {
 
     // endregion
 
-    // region ПОЛАРИС ЗЭЭЛ ҮҮСГЭХ Munkh
+    // region ЗЭЭЛ ҮҮСГЭХ Munkh
 
     public LoanAccountResponse createLoan(CreateLoanRequest createLoanRequest) {
 
@@ -498,6 +498,35 @@ public class LoanService {
         polarisClient.editLoanAccountRepayment(editRepaymentRequest);
         return new CustomResponseDto("Амжилттай!");
     }
+
+    // region Зээлийн эргэн төлөлтийн хуваарь үүсгэх
+
+    public CustomResponseDto createLoanAccountRepayment(CreateRepaymentRequest createRepaymentRequest) {
+        CreateRepaymentRequestPol createRepaymentRequestPol = new CreateRepaymentRequestPol();
+        createRepaymentRequestPol.setAcntCode(createRepaymentRequest.getAcntCode());
+        createRepaymentRequestPol.setCalcAmt(createRepaymentRequest.getCalcAmt());
+        createRepaymentRequestPol.setPayType(createRepaymentRequest.getPayType());
+        createRepaymentRequestPol.setPayFreq(createRepaymentRequest.getPayFreq());
+        createRepaymentRequestPol.setPayMonth(null);
+        createRepaymentRequestPol.setPayDay1(createRepaymentRequest.getPayDay1());
+        createRepaymentRequestPol.setPayDay2(null);
+        createRepaymentRequestPol.setHolidayOption(0);
+        createRepaymentRequestPol.setShiftPartialPay(0);
+        createRepaymentRequestPol.setShiftType(0);
+        createRepaymentRequestPol.setTermFreeTimes(0);
+        createRepaymentRequestPol.setIntTypeCode("SIMPLE_INT");
+        createRepaymentRequestPol.setStartDate(getSystemDateInStringObject());
+        createRepaymentRequestPol.setEndDate(createRepaymentRequest.getEndDate());
+        createRepaymentRequestPol.setAdvDate(null);
+        createRepaymentRequestPol.setDescription(createRepaymentRequest.getDescription());
+        createRepaymentRequestPol.setEscapeMonths(null);
+        createRepaymentRequestPol.setListNrs(null);
+
+        polarisClient.createLoanAccountRepayment(createRepaymentRequestPol);
+        return new CustomResponseDto("Амжилттай!");
+    }
+
+    // endregion
 
     public NRSListResponseDto calculateLoanAccountRepayment(CalculateRepaymentRequestDto calculateRepaymentRequestDto) {
         CalculateRepaymentRequest calculateRepaymentRequest = new CalculateRepaymentRequest();

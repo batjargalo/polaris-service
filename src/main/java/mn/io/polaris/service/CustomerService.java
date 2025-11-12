@@ -78,27 +78,16 @@ public class CustomerService {
 
         GetLoanList loanList = new GetLoanList();
 
-        // Map<GetLoanListParams,Object> getLoanListParams = new HashMap<>();
         // First condition
         GetLoanListCust cust1 = new GetLoanListCust();
-        // cond1.operation = "=";
-        // cond1.field = "CUST_CODE";
-        // cond1.type = 3;
-        // cond1.value = loanAccountListRequest.getCustCode();
         cust1.setField("CUST_CODE");
         cust1.setOperation("=");
         cust1.setType(3);
         cust1.setValue(loanAccountListRequest.getCustCode());
         loanList.addToMap(cust1, "someValue");
-        // conditions.put(cond1);
 
         // Second condition
         GetLoanListCust cust2 = new GetLoanListCust();
-        // cond2.field = "PROD_CODE";
-        // cond2.operation = "=";
-        // cond2.type = 3;
-        // cond2.value = String.valueOf(loanAccountListRequest.getProdCode());
-        // conditions.add(cond2);
         cust2.setField("PROD_CODE");
         cust2.setOperation("=");
         cust2.setType(3);
@@ -113,38 +102,6 @@ public class CustomerService {
         para._inValues = Arrays.asList("O");
 
         loanList.addToParams(para, "anotherValue");
-        // getLoanListParams.add(para);
-        // set params
-        // List<GetLoanListParams> addParams = new ArrayList<>();
-        // GetLoanListParams getLoanListParams = new GetLoanListParams();
-        // List<String> values = Arrays.asList("O");
-        // getLoanListParams.setValue(values);
-        // getLoanListParams.setType(3);
-        // getLoanListParams.setOperation("IN");
-        // getLoanListParams.setField("STATUS");
-        // addParams.add(getLoanListParams);
-        // getLoanList.setParams(addParams);
-        // // set cust
-        // List<GetLoanListCust> addCust = new ArrayList<>();
-        // GetLoanListCust getLoanListCust = new GetLoanListCust();
-        // getLoanListCust.setField("CUST_CODE");
-        // getLoanListCust.setOperation("=");
-        // getLoanListCust.setType(3);
-        // getLoanListCust.setValue(loanAccountListRequest.getCustCode());
-        // addCust.add(getLoanListCust);
-        // getLoanList.setCust(addCust);
-        // // set prod
-        // List<GetLoanListProd> addProd = new ArrayList<>();
-        // GetLoanListProd getLoanListProd = new GetLoanListProd();
-        // getLoanListProd.setField("PROD_CODE");
-        // getLoanListProd.setOperation("=");
-        // getLoanListProd.setType(3);
-        // getLoanListProd.setValue(loanAccountListRequest.getProdCode());
-        // addProd.add(getLoanListProd);
-        // getLoanList.setProd(addProd);
-        // getLoanList.setPageNumber(loanAccountListRequest.getPageNumber());
-        // getLoanList.setPageSize(loanAccountListRequest.getPageSize());
-
         loanList.setPageNumber(0);
         loanList.setPageSize(25);
 

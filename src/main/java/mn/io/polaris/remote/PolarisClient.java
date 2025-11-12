@@ -692,11 +692,11 @@ public class PolarisClient {
         Gson gson1 = new Gson();
         String responseBody = sendRequest(new HttpEntity<>(gson1.toJson(array), headers));
         // String json = "{" + "\"acntCode\": \" " + responseBody + "}";
-        Map<String, Object> jsonMap = new HashMap<>();
-        jsonMap.put("isSupervisor", extractValue(responseBody));
+        // Map<String, Object> jsonMap = new HashMap<>();
+        // jsonMap.put("isSupervisor", extractValue(responseBody));
         // Serialize to JSON
         Gson gson = new Gson();
-        String json = gson.toJson(jsonMap);
+        String json = gson.toJson(responseBody);
         ObjectMapper mapper = new ObjectMapper();
         try {
             loanExtendPResponse = mapper.readValue(
@@ -836,6 +836,34 @@ public class PolarisClient {
         sendRequest(createHttpEntity(array, headers));
     }
 
+    // region Зээлийн эргэн төлөлтийн хуваарь үүсгэх
+    public void createLoanAccountRepayment(CreateRepaymentRequestPol createRepaymentRequestPol) {
+        List<Object> array = new ArrayList<>();
+        array.add(createRepaymentRequestPol.getAcntCode());
+        array.add(createRepaymentRequestPol.getStartDate());
+        array.add(createRepaymentRequestPol.getCalcAmt());
+        array.add(createRepaymentRequestPol.getPayType());
+        array.add(createRepaymentRequestPol.getPayFreq());
+        array.add(createRepaymentRequestPol.getPayMonth());
+        array.add(createRepaymentRequestPol.getPayDay1());
+        array.add(createRepaymentRequestPol.getPayDay2());
+        array.add(createRepaymentRequestPol.getHolidayOption());
+        array.add(createRepaymentRequestPol.getShiftPartialPay());
+        array.add(createRepaymentRequestPol.getShiftType());
+        array.add(createRepaymentRequestPol.getTermFreeTimes());
+        array.add(createRepaymentRequestPol.getIntTypeCode());
+        array.add(createRepaymentRequestPol.getEndDate());
+        array.add(createRepaymentRequestPol.getAdvDate());
+        array.add(createRepaymentRequestPol.getDescription());
+        array.add(createRepaymentRequestPol.getEscapeMonths());
+        array.add(createRepaymentRequestPol.getListNrs());
+
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610258");
+        sendRequest(createHttpEntity(array, headers));
+    }
+
+    // endregion
     public NRSListResponseDto calculateLoanAccountRepayment(CalculateRepaymentRequest calculateRepaymentRequest) {
         List<Object> array = new ArrayList<>();
         array.add(calculateRepaymentRequest.getAcntCode());
