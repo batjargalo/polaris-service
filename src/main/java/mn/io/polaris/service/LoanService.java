@@ -510,7 +510,7 @@ public class LoanService {
         createRepaymentRequestPol.setPayMonth(null);
         createRepaymentRequestPol.setPayDay1(createRepaymentRequest.getPayDay1());
         createRepaymentRequestPol.setPayDay2(null);
-        createRepaymentRequestPol.setHolidayOption(0);
+        createRepaymentRequestPol.setHolidayOption(1);
         createRepaymentRequestPol.setShiftPartialPay(0);
         createRepaymentRequestPol.setShiftType(0);
         createRepaymentRequestPol.setTermFreeTimes(0);

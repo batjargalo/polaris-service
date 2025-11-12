@@ -31,13 +31,4 @@ public class LoanExtendPResponse {
     // private String feesPreview;
     private List<Object> feesPreview;
 
-    // // Getters and setters
-    // public Map<String, List<Object>> getData() {
-    // return data;
-    // }
-
-    // public void setFeesPreview(Map<String, List<Object>> feesPreview) {
-    // this.feesPreview = feesPreview;
-    // }
-
 }
