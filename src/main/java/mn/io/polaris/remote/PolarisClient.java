@@ -684,25 +684,16 @@ public class PolarisClient {
 
         // Add the map to the list
         array.add(map);
-
-        // array.add(loanExtensionRequest.toJsonString());
-
         HttpHeaders headers = setPolarisHeaders();
         headers.add("op", "13610271");
         Gson gson1 = new Gson();
         String responseBody = sendRequest(new HttpEntity<>(gson1.toJson(array), headers));
-        // String json = "{" + "\"acntCode\": \" " + responseBody + "}";
-        // Map<String, Object> jsonMap = new HashMap<>();
-        // jsonMap.put("isSupervisor", extractValue(responseBody));
-        // Serialize to JSON
-        Gson gson = new Gson();
-        String json = gson.toJson(responseBody);
+
         ObjectMapper mapper = new ObjectMapper();
         try {
             loanExtendPResponse = mapper.readValue(
-                    json,
+                    responseBody,
                     LoanExtendPResponse.class);
-            // loanAccountResponse.setCaAcntCode(extractedId);
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
