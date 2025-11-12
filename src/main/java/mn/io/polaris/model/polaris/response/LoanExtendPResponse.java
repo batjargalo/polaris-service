@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Map;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -14,19 +15,29 @@ import java.util.List;
 public class LoanExtendPResponse {
 
     // private String txnPreview;
-    // private Integer isSupervisor;
-    // private Integer isPreviewFee;
+    private List<Object> txnPreview;
+    private Integer svCount;
+    private Integer isPreview;
+    private Integer tdBreakPenalty;
+    private Integer isPreviewFee;
+    private List<Object> subJrnos;
+    private Integer jrItemNoAndIncr;
+    private Integer deductedFeeAmtFromTxn;
+    private Integer deductedFeeAmtFromAcnt;
+    private Integer deductedFeeAmtFromTxnCont;
+    private Integer isSupervisor;
+    private Integer feeException;
+    private BigDecimal txnJrno;
     // private String feesPreview;
-    // private Integer txnJrno;
-    private Map<String, List<Object>> data; // For {"haha": [], "hoho": []}
+    private List<Object> feesPreview;
 
-    // Getters and setters
-    public Map<String, List<Object>> getData() {
-        return data;
-    }
+    // // Getters and setters
+    // public Map<String, List<Object>> getData() {
+    // return data;
+    // }
 
-    public void setData(Map<String, List<Object>> data) {
-        this.data = data;
-    }
+    // public void setFeesPreview(Map<String, List<Object>> feesPreview) {
+    // this.feesPreview = feesPreview;
+    // }
 
 }
