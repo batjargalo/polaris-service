@@ -402,9 +402,14 @@ public class PolarisClient {
             polarisDaoRepository.save(savedPolarisDao);
             return responseBody;
         } catch (HttpClientErrorException http) {
+            // For 4xx errors: Get status code, reason, and body from Munkh
             log.error("httpClient: " + http);
+            savedPolarisDao.setResponse(http.getMessage()); // added
+            savedPolarisDao.setResponseDate(new Date()); // added
+            polarisDaoRepository.save(savedPolarisDao); // added
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, http.getMessage());
         } catch (HttpServerErrorException httpServer) {
+            // For 5xx errors: Similar handling
             log.error("httpServer: " + httpServer);
             savedPolarisDao.setResponse(httpServer.getMessage());
             savedPolarisDao.setResponseDate(new Date());
@@ -415,6 +420,9 @@ public class PolarisClient {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, httpServer.getMessage());
         } catch (Exception e) {
             log.error("error: " + e);
+            savedPolarisDao.setResponse(e.getMessage()); // added
+            savedPolarisDao.setResponseDate(new Date()); // added
+            polarisDaoRepository.save(savedPolarisDao); // added
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
