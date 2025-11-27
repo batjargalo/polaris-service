@@ -797,6 +797,58 @@ public class PolarisClient {
 
     // endregion
 
+    public List<Account> getCollAccountList(AccountListRequest accountListRequest) {
+        List<Object> arrayInside = getCollObjects(accountListRequest);
+
+        List<Object> array = new ArrayList<>();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonOutput = gson.toJson(arrayInside);
+
+        array.add(jsonOutput);
+        array.add(accountListRequest.getPageNumber());
+        array.add(accountListRequest.getPageSize());
+
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610333");
+        String responseBody = sendRequest(createHttpEntity(array, headers));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    private static List<Object> getCollObjects(AccountListRequest accountListRequest) {
+        Map<String, Object> firstObject = new HashMap<>();
+        firstObject.put("field", "CUST_CODE");
+        firstObject.put("operation", "=");
+        firstObject.put("type", 3);
+        firstObject.put("value", accountListRequest.getCustCode());
+
+        Map<String, Object> secondObject = new HashMap<>();
+        secondObject.put("_iField", "STATUS");
+        secondObject.put("_iOperation", "IN");
+        secondObject.put("_iType", 3);
+
+        List<String> inValues = new ArrayList<>();
+        inValues.add("O");
+        secondObject.put("_inValues", inValues);
+
+        Map<String, Object> thirdObject = new HashMap<>();
+        thirdObject.put("field", "ACNT_TYPE");
+        thirdObject.put("operation", "=");
+        thirdObject.put("type", 3);
+        thirdObject.put("value", "COLL");
+
+        List<Object> arrayInside = new ArrayList<>();
+        arrayInside.add(firstObject);
+        arrayInside.add(secondObject);
+        arrayInside.add(thirdObject);
+        return arrayInside;
+    }
+
     private static List<Object> getObjects(AccountListRequest accountListRequest) {
         Map<String, Object> firstObject = new HashMap<>();
         firstObject.put("field", "CUST_CODE");
