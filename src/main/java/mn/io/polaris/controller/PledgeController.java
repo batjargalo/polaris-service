@@ -4,10 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import mn.io.polaris.model.polaris.AccountNo;
-import mn.io.polaris.model.polaris.Pledge;
-import mn.io.polaris.model.polaris.PledgeInfo;
-import mn.io.polaris.model.polaris.PledgeResponse;
+import mn.io.polaris.model.polaris.*;
+import mn.io.polaris.model.request.AccountListRequest;
 import mn.io.polaris.model.request.PledgeInfoByAccountRequest;
 import mn.io.polaris.service.PledgeService;
 import org.springframework.http.MediaType;
@@ -42,6 +40,12 @@ public class PledgeController {
     @Operation(summary = "Барьцаа хөрөнгийн дансны дэлгэрэнгүй")
     public Pledge getPledge(@RequestBody @Valid AccountNo accountNo) {
         return pledgeService.getPledge(accountNo);
+    }
+
+    @PostMapping(path = "/open")
+    @Operation(summary = "Нээлттэй барьцаа хөрөнгийн дансны жагсаалт")
+    public List<Account> getCollAccountList(@RequestBody @Valid AccountListRequest accountListRequest) {
+        return pledgeService.getCollAccountList(accountListRequest);
     }
 
 }
