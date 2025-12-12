@@ -69,11 +69,27 @@ public class LoanController {
         return loanService.payLoan(payLoanRequestDto);
     }
 
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
+    @PostMapping(path = "/digital-pay")
+    @Operation(summary = "Цахим зээл төлөлт")
+    public DepositTdAccountResponseDto payDigitalLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {
+        return loanService.payDigitalLoan(payLoanRequestDto);
+    }
+    // endregion
+
     @PostMapping(path = "/close")
     @Operation(summary = "Зээлийн данс хаах (Бэлэн бус)")
     public DepositTdAccountResponseDto closeLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {
         return loanService.closeLoan(payLoanRequestDto);
     }
+
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Хаах
+    @PostMapping(path = "/digital-close")
+    @Operation(summary = "Зээлийн данс хаах (Бэлэн бус)")
+    public DepositTdAccountResponseDto closeDigitalLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {
+        return loanService.closeDigitalLoan(payLoanRequestDto);
+    }
+    // endregion
 
     @PostMapping(path = "/create/td")
     @Operation(summary = "Хадгаламжийн данс барьцаалж зээл олгох - Бүх үйлдлийг нэгтгэсэн")
