@@ -39,7 +39,7 @@ public class LoanService {
     @Value("${qpay.loan.acc}")
     private String qpayLoanAccount;
 
-    @Value("${qpay.digital.loan.acc }")
+    @Value("${qpay.digital.loan.acc}")
     private String qpayDigitalLoanAccount;
 
     public LoanAccountDetailDto getLoanInfo(InfoRequest infoRequest) {
