@@ -81,6 +81,9 @@ public class LoanAccountDetailDto {
     @Schema(description = "Бүтээгдэхүүний төрөл")
     private String prodType;
 
+    @Schema(description = "Бүтээгдэхүүний код")
+    private String prodCode;
+
     @Schema(description = "Нийт үлдэгдэл")
     private BigDecimal totalBal;
 

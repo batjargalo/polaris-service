@@ -39,7 +39,7 @@ public class LoanService {
     @Value("${qpay.loan.acc}")
     private String qpayLoanAccount;
 
-    @Value("${qpay.digital.loan.acc }")
+    @Value("${qpay.loan.digital.acc}")
     private String qpayDigitalLoanAccount;
 
     public LoanAccountDetailDto getLoanInfo(InfoRequest infoRequest) {
@@ -212,6 +212,7 @@ public class LoanService {
         loanAccountDetailDto.setAvailComBal(loanAccount.getAvailComBal());
         loanAccountDetailDto.setUsedComBal(loanAccount.getUsedComBal());
         loanAccountDetailDto.setProdType(loanAccount.getProdType());
+        loanAccountDetailDto.setProdCode(loanAccount.getProdCode());
         return loanAccountDetailDto;
     }
 
