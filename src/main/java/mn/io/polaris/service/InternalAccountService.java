@@ -33,6 +33,9 @@ public class InternalAccountService {
     @Value("${cgw.loan.allowance.acc}")
     private String cgwLoanAllowanceAccount;
 
+    @Value("${cgw.digitalloan.allowance.acc}")
+    private String cgwDigitalLoanAllowanceAccount;
+
     @Resource
     private PolarisClient polarisClient;
 
@@ -82,7 +85,8 @@ public class InternalAccountService {
         return polarisClient.betweenAccounts(betweenAccountsRequest);
     }
 
-    public DepositTdAccountResponseDto loanBetweenAccounts(LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
+    public DepositTdAccountResponseDto loanBetweenAccounts(
+            LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
         BigDecimal rate = Constants.DEFAULT_RATE;
         TransferRequest transferRequest = new TransferRequest();
         transferRequest.setTxnAcntCode(loanBetweenAccountsRequestDto.getTxnAcntCode());
@@ -99,6 +103,27 @@ public class InternalAccountService {
         transferRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
         return polarisClient.transferFromTempAccToInternalAcc(transferRequest);
     }
+
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
+    public DepositTdAccountResponseDto DigitalLoanBetweenAccounts(
+            LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
+        BigDecimal rate = Constants.DEFAULT_RATE;
+        TransferRequest transferRequest = new TransferRequest();
+        transferRequest.setTxnAcntCode(loanBetweenAccountsRequestDto.getTxnAcntCode());
+        transferRequest.setTxnAmount(loanBetweenAccountsRequestDto.getTxnAmount());
+        transferRequest.setRate(rate);
+        transferRequest.setContAcntCode(cgwDigitalLoanAllowanceAccount);
+        transferRequest.setContRate(rate);
+        transferRequest.setContAmount(loanBetweenAccountsRequestDto.getTxnAmount());
+        transferRequest.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
+        transferRequest.setTxnDesc(loanBetweenAccountsRequestDto.getTxnDesc());
+        transferRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        transferRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        transferRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
+        transferRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
+        return polarisClient.transferFromTempAccToInternalAcc(transferRequest);
+    }
+    // endregion
 
     public DepositTdAccountResponseDto loanNonCash(LoanNonCashRequestDto loanNonCashRequestDto) {
         LoanNonCashRequest loanNonCashRequest = new LoanNonCashRequest();
