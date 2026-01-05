@@ -26,13 +26,15 @@ public class InternalAccountController {
 
     @PostMapping(path = "/deposit-td-account")
     @Operation(summary = "Дотоодын данснаас хугацаат хадгаламж руу шилжүүлэг хийх")
-    public DepositTdAccountResponseDto depositTdAccount(@RequestBody @Valid DepositTdAccountRequestDto depositTdAccountRequestDto) {
+    public DepositTdAccountResponseDto depositTdAccount(
+            @RequestBody @Valid DepositTdAccountRequestDto depositTdAccountRequestDto) {
         return internalAccountService.depositTdAccount(depositTdAccountRequestDto);
     }
 
     @PostMapping(path = "/between-accounts")
     @Operation(summary = "Дотоодын данснаас дотоод данс руу шилжүүлэг")
-    public DepositTdAccountResponseDto betweenAccounts(@RequestBody @Valid BetweenAccountsRequestDto betweenAccountsRequestDto) {
+    public DepositTdAccountResponseDto betweenAccounts(
+            @RequestBody @Valid BetweenAccountsRequestDto betweenAccountsRequestDto) {
         return internalAccountService.betweenAccounts(betweenAccountsRequestDto);
     }
 
@@ -44,8 +46,18 @@ public class InternalAccountController {
 
     @PostMapping(path = "/loan-between-accounts")
     @Operation(summary = "Дотоодын данснаас дотоод данс руу шилжүүлэг /Зээл/")
-    public DepositTdAccountResponseDto loanBetweenAccounts(@RequestBody @Valid LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
+    public DepositTdAccountResponseDto loanBetweenAccounts(
+            @RequestBody @Valid LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
         return internalAccountService.loanBetweenAccounts(loanBetweenAccountsRequestDto);
     }
+
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
+    @PostMapping(path = "/digital-loan-between-accounts")
+    @Operation(summary = "Депо данснаас дотоод данс руу шилжүүлэг /Дижитал Зээл/")
+    public DepositTdAccountResponseDto DigitalLoanBetweenAccounts(
+            @RequestBody @Valid LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
+        return internalAccountService.DigitalLoanBetweenAccounts(loanBetweenAccountsRequestDto);
+    }
+    // endregion
 
 }
