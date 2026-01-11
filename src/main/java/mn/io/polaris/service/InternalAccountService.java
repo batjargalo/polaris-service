@@ -5,7 +5,9 @@ import lombok.extern.log4j.Log4j2;
 import mn.io.polaris.constant.Constants;
 import mn.io.polaris.helper.Utils;
 import mn.io.polaris.model.polaris.request.*;
+import mn.io.polaris.model.polaris.response.BacAcntBalance;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
+import mn.io.polaris.model.request.BacAcntCode;
 import mn.io.polaris.model.request.BetweenAccountsRequestDto;
 import mn.io.polaris.model.request.DepositTdAccountRequestDto;
 import mn.io.polaris.model.request.LoanBetweenAccountsRequestDto;
@@ -26,6 +28,9 @@ public class InternalAccountService {
 
     @Value("${qpay.td.acc}")
     private String qpayTdAccount;
+
+    @Value("${qpay.dan.acc}")
+    private String qpayDANAccount;
 
     @Value("${qpay.collect.acc}")
     private String qpayCollectAccount;
@@ -70,6 +75,8 @@ public class InternalAccountService {
             betweenAccountsRequest.setTxnAcntCode(qpayLoanAccount);
         } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.TD)) {
             betweenAccountsRequest.setTxnAcntCode(qpayTdAccount);
+        } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.DAN)) {
+            betweenAccountsRequest.setTxnAcntCode(qpayDANAccount);
         }
         betweenAccountsRequest.setTxnAmount(betweenAccountsRequestDto.getTxnAmount());
         betweenAccountsRequest.setRate(rate);
@@ -122,6 +129,13 @@ public class InternalAccountService {
         transferRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
         transferRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
         return polarisClient.transferFromTempAccToInternalAcc(transferRequest);
+    }
+    // endregion
+
+    // region Дотоодын дансны үлдэгдэл
+    public BacAcntBalance DigitalBacAcntBalance(
+            BacAcntCode bacAcntCode) {
+        return polarisClient.checkBacAcntBalance(bacAcntCode);
     }
     // endregion
 

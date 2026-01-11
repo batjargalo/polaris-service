@@ -164,6 +164,9 @@ public class CustomerService {
         if (customerEditRequest.getEmail() != null && !customerEditRequest.getEmail().isEmpty()) {
             retail.setEmail(customerEditRequest.getEmail());
         }
+        if (customerEditRequest.getIdCardNo() != null && !customerEditRequest.getIdCardNo().isEmpty()) {
+            retail.setIdCardNo(customerEditRequest.getIdCardNo());
+        }
         polarisClient.editRetailInfo(retail);
     }
 

@@ -12,5 +12,6 @@ public class CustomerEditRequest {
     @Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
     private String phone;
+    private String idCardNo;
 
 }

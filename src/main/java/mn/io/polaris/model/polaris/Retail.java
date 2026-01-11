@@ -50,6 +50,7 @@ public class Retail {
     private String sexName2;
     private String shortName;
     private Integer status;
+    private String idCardNo;
 
     public String toJsonString() {
         Gson gson = new GsonBuilder()
