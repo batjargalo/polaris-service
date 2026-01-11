@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import mn.io.polaris.model.polaris.response.BacAcntBalance;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
+import mn.io.polaris.model.request.BacAcntCode;
 import mn.io.polaris.model.request.BetweenAccountsRequestDto;
 import mn.io.polaris.model.request.DepositTdAccountRequestDto;
 import mn.io.polaris.model.request.LoanBetweenAccountsRequestDto;
@@ -57,6 +59,15 @@ public class InternalAccountController {
     public DepositTdAccountResponseDto DigitalLoanBetweenAccounts(
             @RequestBody @Valid LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
         return internalAccountService.DigitalLoanBetweenAccounts(loanBetweenAccountsRequestDto);
+    }
+    // endregion
+
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
+    @PostMapping(path = "/account-balance")
+    @Operation(summary = "Дотоодын дансны үлдэгдэл /Дижитал Зээл/")
+    public BacAcntBalance DigitalBacbalance(
+            @RequestBody @Valid BacAcntCode bacAcntCode) {
+        return internalAccountService.DigitalBacAcntBalance(bacAcntCode);
     }
     // endregion
 
