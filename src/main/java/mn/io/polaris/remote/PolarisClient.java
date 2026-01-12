@@ -11,6 +11,7 @@ import mn.io.polaris.model.dao.PolarisDao;
 import mn.io.polaris.model.dao.SystemDao;
 import mn.io.polaris.model.polaris.*;
 import mn.io.polaris.model.polaris.request.*;
+import mn.io.polaris.model.polaris.response.BacAcntBalance;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.polaris.response.LoanAccountResponse;
 import mn.io.polaris.model.polaris.response.LoanAcntListResponse;
@@ -735,6 +736,34 @@ public class PolarisClient {
         headers.add("op", "13610053");
         return getDepositTdAccountResponseDto(array, headers);
     }
+
+    // region Дотоодын дансны үлдэгдэл
+    public BacAcntBalance checkBacAcntBalance(BacAcntCode bacAcntCode) {
+        List<Object> array = new ArrayList<>();
+        array.add(bacAcntCode.getAcntCode());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13619992");
+        BacAcntBalance bacAcntBalance;
+        String responseBody = sendRequest(createHttpEntity(array, headers));
+        Map<String, Object> jsonMap = new HashMap<>();
+        jsonMap.put("balance", responseBody);
+        // Serialize to JSON
+        Gson gson = new Gson();
+        String json = gson.toJson(jsonMap);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            bacAcntBalance = mapper.readValue(
+                    json,
+                    BacAcntBalance.class);
+            // loanAccountResponse.setCaAcntCode(extractedId);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return bacAcntBalance;
+    }
+
+    // endregion
 
     public DepositTdAccountResponseDto closeTempAccount(CloseTempAccountRequest closeTempAccountRequest) {
         List<Object> array = new ArrayList<>();
