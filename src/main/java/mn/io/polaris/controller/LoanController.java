@@ -129,6 +129,14 @@ public class LoanController {
         return loanService.editLoanAccountRepayment(dto);
     }
 
+    // region ПОЛАРИСРУУ ЗЭЭЛ ҮҮСГЭХ ХҮСЭЛТ
+    @PostMapping(path = "/edit/repaymentnrs")
+    @Operation(summary = "Хур.хүүг дараагийн төлөлтөнд оруулах эсэх чектэйгээр төлбөрийн хуваарь засварлах")
+    public CustomResponseDto editLoanAccountRepaymentNrs(@RequestBody @Valid EditRepaymentRequestDto dto) {
+        return loanService.editLoanAccountRepaymentNrs(dto);
+    }
+    // endregion
+
     @PostMapping(path = "/calculate/repayment")
     @Operation(summary = "Зээлийн эргэн төлөлтийн хуваарь тооцоолох")
     public NRSListResponseDto calculateLoanAccountRepayment(@RequestBody @Valid CalculateRepaymentRequestDto dto) {

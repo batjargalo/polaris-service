@@ -560,6 +560,29 @@ public class LoanService {
         return new CustomResponseDto("Амжилттай!");
     }
 
+    public CustomResponseDto editLoanAccountRepaymentNrs(EditRepaymentRequestDto editRepaymentRequestDto) {
+        EditRepaymentRequest editRepaymentRequest = new EditRepaymentRequest();
+        editRepaymentRequest.setAcntCode(editRepaymentRequestDto.getAcntCode());
+        editRepaymentRequest.setCalcAmt(editRepaymentRequestDto.getCalcAmt());
+        editRepaymentRequest.setPayType(editRepaymentRequestDto.getPayType());
+        editRepaymentRequest.setPayFreq(editRepaymentRequestDto.getPayFreq());
+        editRepaymentRequest.setPayMonth(null);
+        editRepaymentRequest.setPayDay1(editRepaymentRequestDto.getPayDay1());
+        editRepaymentRequest.setPayDay2(null);
+        editRepaymentRequest.setHolidayOption(null);
+        editRepaymentRequest.setShiftPartialPay(0);
+        editRepaymentRequest.setShiftType(null);
+        editRepaymentRequest.setTermFreeTimes(0);
+        editRepaymentRequest.setIntTypeCode("SIMPLE_INT");
+        editRepaymentRequest.setStartDate(getSystemDateInStringObject());
+        editRepaymentRequest.setEndDate(editRepaymentRequestDto.getEndDate());
+        editRepaymentRequest.setAdvDate(null);
+        editRepaymentRequest.setDescription(editRepaymentRequestDto.getDescription());
+        editRepaymentRequest.setEscapeMonths(null);
+        polarisClient.editLoanAccountRepaymentNrs(editRepaymentRequest);
+        return new CustomResponseDto("Амжилттай!");
+    }
+
     // region Зээлийн эргэн төлөлтийн хуваарь үүсгэх
 
     public CustomResponseDto createLoanAccountRepayment(CreateRepaymentRequest createRepaymentRequest) {
