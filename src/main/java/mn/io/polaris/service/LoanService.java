@@ -213,6 +213,11 @@ public class LoanService {
         loanAccountDetailDto.setUsedComBal(loanAccount.getUsedComBal());
         loanAccountDetailDto.setProdType(loanAccount.getProdType());
         loanAccountDetailDto.setProdCode(loanAccount.getProdCode());
+        // add
+        loanAccountDetailDto.setAcrBaseintBal(loanAccount.getAcrBaseintBal());
+        loanAccountDetailDto.setBillBaseintBal(loanAccount.getBillBaseintBal());
+        loanAccountDetailDto.setBillFinepBal(loanAccount.getBillFinepBal());
+        loanAccountDetailDto.setBillFinebBal(loanAccount.getBillFinebBal());
         return loanAccountDetailDto;
     }
 
@@ -557,6 +562,29 @@ public class LoanService {
         editRepaymentRequest.setPayAmt(null);
         editRepaymentRequest.setAddAccrIntAmt(1);
         polarisClient.editLoanAccountRepayment(editRepaymentRequest);
+        return new CustomResponseDto("Амжилттай!");
+    }
+
+    public CustomResponseDto editLoanAccountRepaymentNrs(EditRepaymentRequestDto editRepaymentRequestDto) {
+        EditRepaymentRequest editRepaymentRequest = new EditRepaymentRequest();
+        editRepaymentRequest.setAcntCode(editRepaymentRequestDto.getAcntCode());
+        editRepaymentRequest.setCalcAmt(editRepaymentRequestDto.getCalcAmt());
+        editRepaymentRequest.setPayType(editRepaymentRequestDto.getPayType());
+        editRepaymentRequest.setPayFreq(editRepaymentRequestDto.getPayFreq());
+        editRepaymentRequest.setPayMonth(null);
+        editRepaymentRequest.setPayDay1(editRepaymentRequestDto.getPayDay1());
+        editRepaymentRequest.setPayDay2(null);
+        editRepaymentRequest.setHolidayOption(null);
+        editRepaymentRequest.setShiftPartialPay(0);
+        editRepaymentRequest.setShiftType(null);
+        editRepaymentRequest.setTermFreeTimes(0);
+        editRepaymentRequest.setIntTypeCode("SIMPLE_INT");
+        editRepaymentRequest.setStartDate(getSystemDateInStringObject());
+        editRepaymentRequest.setEndDate(editRepaymentRequestDto.getEndDate());
+        editRepaymentRequest.setAdvDate(null);
+        editRepaymentRequest.setDescription(editRepaymentRequestDto.getDescription());
+        editRepaymentRequest.setEscapeMonths(null);
+        polarisClient.editLoanAccountRepaymentNrs(editRepaymentRequest);
         return new CustomResponseDto("Амжилттай!");
     }
 

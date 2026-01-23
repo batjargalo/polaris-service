@@ -916,6 +916,14 @@ public class PolarisClient {
         sendRequest(createHttpEntity(array, headers));
     }
 
+    public void editLoanAccountRepaymentNrs(EditRepaymentRequest editRepaymentRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(editRepaymentRequest.toJsonStringSelf());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610259");
+        sendRequest(createHttpEntity(array, headers));
+    }
+
     // region Зээлийн эргэн төлөлтийн хуваарь үүсгэх
     public void createLoanAccountRepayment(CreateRepaymentRequestPol createRepaymentRequestPol) {
         List<Object> array = new ArrayList<>();
