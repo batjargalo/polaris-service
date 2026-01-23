@@ -87,4 +87,16 @@ public class LoanAccountDetailDto {
     @Schema(description = "Нийт үлдэгдэл")
     private BigDecimal totalBal;
 
+    @Schema(description = "Хуримтлагдсан хүү")
+    private BigDecimal acrBaseintBal;
+
+    @Schema(description = "Үндсэн хүүгийн өрийн авлагын дүн")
+    private BigDecimal billBaseintBal;
+
+    @Schema(description = "Торгуулийн хүүгийн огноо")
+    private BigDecimal billFinepBal;
+
+    @Schema(description = "Үндсэн хүүнээс бодсон торгуулийн хүүгийн дүн")
+    private BigDecimal billFinebBal;
+
 }

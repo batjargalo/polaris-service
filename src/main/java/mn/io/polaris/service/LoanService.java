@@ -213,6 +213,11 @@ public class LoanService {
         loanAccountDetailDto.setUsedComBal(loanAccount.getUsedComBal());
         loanAccountDetailDto.setProdType(loanAccount.getProdType());
         loanAccountDetailDto.setProdCode(loanAccount.getProdCode());
+        // add
+        loanAccountDetailDto.setAcrBaseintBal(loanAccount.getAcrBaseintBal());
+        loanAccountDetailDto.setBillBaseintBal(loanAccount.getBillBaseintBal());
+        loanAccountDetailDto.setBillFinepBal(loanAccount.getBillFinepBal());
+        loanAccountDetailDto.setBillFinebBal(loanAccount.getBillFinebBal());
         return loanAccountDetailDto;
     }
 
