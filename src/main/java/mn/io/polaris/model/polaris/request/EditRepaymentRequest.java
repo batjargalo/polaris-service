@@ -17,7 +17,7 @@ public class EditRepaymentRequest {
 
     private String acntCode;
     private BigDecimal calcAmt;
-    private Integer payType;
+    private String payType;
     private String payFreq;
     private Integer payMonth;
     private Integer payDay1;

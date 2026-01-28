@@ -19,6 +19,8 @@ public class BetweenAccountsRequest {
     private BigDecimal contRate;
     private String rateTypeId;
     private String txnDesc;
+    private String tcustRegister;
+    private String tcustRegisterMask;
     private String sourceType;
     private int isPreview;
     private int isPreviewFee;

@@ -14,11 +14,13 @@ public class EditRepaymentRequestDto {
     @NotNull
     private BigDecimal calcAmt;
     @NotNull
-    private Integer payType;
+    private String payType;
     @NotEmpty
     private String payFreq;
     @NotNull
     private Integer payDay1;
+    @NotEmpty
+    private String startDate;
     @NotEmpty
     private String endDate;
     @NotEmpty

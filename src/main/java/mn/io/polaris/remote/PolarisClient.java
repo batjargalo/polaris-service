@@ -598,6 +598,14 @@ public class PolarisClient {
         return getDepositTdAccountResponseDto(array, headers);
     }
 
+    public DepositTdAccountResponseDto payDigitalLoanCustom(PayLoanRequestCustom payLoanRequestCustom) {
+        List<Object> array = new ArrayList<>();
+        array.add(payLoanRequestCustom.toJsonStringSelf());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13611311");
+        return getDepositTdAccountResponseDto(array, headers);
+    }
+
     public DepositTdAccountResponseDto closeLoan(CloseLoanRequest closeLoanRequest) {
         List<Object> array = new ArrayList<>();
         array.add(closeLoanRequest.toJsonStringSelf());
@@ -916,9 +924,27 @@ public class PolarisClient {
         sendRequest(createHttpEntity(array, headers));
     }
 
-    public void editLoanAccountRepaymentNrs(EditRepaymentRequest editRepaymentRequest) {
+    public void editLoanAccountRepaymentNrs(EditDigitalRepaymentRequest editDigitalRepaymentRequest) {
         List<Object> array = new ArrayList<>();
-        array.add(editRepaymentRequest.toJsonStringSelf());
+        array.add('"' + editDigitalRepaymentRequest.getAcntCode() + '"');
+        array.add('"' + editDigitalRepaymentRequest.getStartDate() + '"');
+        array.add(editDigitalRepaymentRequest.getCalcAmt());
+        array.add(editDigitalRepaymentRequest.getPayType());
+        array.add('"' + editDigitalRepaymentRequest.getPayFreq() + '"');
+        array.add(editDigitalRepaymentRequest.getPayMonth());
+        array.add(editDigitalRepaymentRequest.getPayDay1());
+        array.add(editDigitalRepaymentRequest.getPayDay2());
+        array.add(editDigitalRepaymentRequest.getHolidayOption());
+        array.add(editDigitalRepaymentRequest.getShiftPartialPay());
+        array.add(editDigitalRepaymentRequest.getShiftType());
+        array.add(editDigitalRepaymentRequest.getTermFreeTimes());
+        array.add('"' + editDigitalRepaymentRequest.getIntTypeCode() + '"');
+        array.add('"' + editDigitalRepaymentRequest.getEndDate() + '"');
+        array.add(editDigitalRepaymentRequest.getAdvDate());
+        array.add('"' + editDigitalRepaymentRequest.getDescription() + '"');
+        array.add(editDigitalRepaymentRequest.getEscapeMonths());
+        array.add(editDigitalRepaymentRequest.getListNrs());
+
         HttpHeaders headers = setPolarisHeaders();
         headers.add("op", "13610259");
         sendRequest(createHttpEntity(array, headers));
@@ -954,11 +980,11 @@ public class PolarisClient {
     // endregion
     public NRSListResponseDto calculateLoanAccountRepayment(CalculateRepaymentRequest calculateRepaymentRequest) {
         List<Object> array = new ArrayList<>();
-        array.add(calculateRepaymentRequest.getAcntCode());
-        array.add(calculateRepaymentRequest.getStartDate());
+        array.add('"' + calculateRepaymentRequest.getAcntCode() + '"');
+        array.add('"' + calculateRepaymentRequest.getStartDate() + '"');
         array.add(calculateRepaymentRequest.getCalcAmt());
-        array.add(calculateRepaymentRequest.getPayType());
-        array.add(calculateRepaymentRequest.getPayFreq());
+        array.add('"' + calculateRepaymentRequest.getPayType() + '"');
+        array.add('"' + calculateRepaymentRequest.getPayFreq() + '"');
         array.add(calculateRepaymentRequest.getPayMonth());
         array.add(calculateRepaymentRequest.getPayDay1());
         array.add(calculateRepaymentRequest.getPayDay2());
@@ -966,8 +992,8 @@ public class PolarisClient {
         array.add(calculateRepaymentRequest.getShiftPartialPay());
         array.add(calculateRepaymentRequest.getShiftType());
         array.add(calculateRepaymentRequest.getTermFreeTimes());
-        array.add(calculateRepaymentRequest.getIntTypeCode());
-        array.add(calculateRepaymentRequest.getEndDate());
+        array.add('"' + calculateRepaymentRequest.getIntTypeCode() + '"');
+        array.add('"' + calculateRepaymentRequest.getEndDate() + '"');
         array.add(calculateRepaymentRequest.getAdvDate());
         array.add(calculateRepaymentRequest.getEscapeMonths());
         array.add(calculateRepaymentRequest.getListNrs());

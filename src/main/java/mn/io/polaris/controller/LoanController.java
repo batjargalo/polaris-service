@@ -69,6 +69,13 @@ public class LoanController {
         return loanService.payLoan(payLoanRequestDto);
     }
 
+    @PostMapping(path = "/digital-pay-custom")
+    @Operation(summary = "Зээл бэлэн бусаар төлөх (гараар хуваарилж)")
+    public DepositTdAccountResponseDto payDigitalLoanCustom(
+            @RequestBody @Valid PayDigitalLoanRequestDto payDigitalLoanRequestDto) {
+        return loanService.payDigitalLoanCustom(payDigitalLoanRequestDto);
+    }
+
     // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
     @PostMapping(path = "/digital-pay")
     @Operation(summary = "Цахим зээл төлөлт")

@@ -84,6 +84,8 @@ public class InternalAccountService {
         betweenAccountsRequest.setContAmount(betweenAccountsRequestDto.getTxnAmount());
         betweenAccountsRequest.setContRate(rate);
         betweenAccountsRequest.setTxnDesc(betweenAccountsRequestDto.getTxnDesc());
+        betweenAccountsRequest.setTcustRegister("test123");
+        betweenAccountsRequest.setTcustRegisterMask("4");
         betweenAccountsRequest.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
         betweenAccountsRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
         betweenAccountsRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);

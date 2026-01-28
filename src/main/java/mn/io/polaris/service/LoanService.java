@@ -268,6 +268,45 @@ public class LoanService {
         return polarisClient.payLoan(payLoanRequest);
     }
 
+    public DepositTdAccountResponseDto payDigitalLoanCustom(PayDigitalLoanRequestDto payDigitalLoanRequestDto) {
+        PayLoanRequestCustom payLoanRequestCustom = new PayLoanRequestCustom();
+        BigDecimal rate = Constants.DEFAULT_RATE;
+        String contAcntCode = qpayDigitalLoanAccount;
+        payLoanRequestCustom.setTxnAcntCode(payDigitalLoanRequestDto.getTxnAcntCode());
+        payLoanRequestCustom.setTxnAmount(payDigitalLoanRequestDto.getTxnAmount());
+        payLoanRequestCustom.setContAmount(payDigitalLoanRequestDto.getTxnAmount());
+        payLoanRequestCustom.setTranAmt(payDigitalLoanRequestDto.getTxnAmount());
+        payLoanRequestCustom.setRate(rate);
+        payLoanRequestCustom.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
+        payLoanRequestCustom.setContAcntCode(contAcntCode);
+        payLoanRequestCustom.setContRate(rate);
+        payLoanRequestCustom.setTxnDesc("Зээл сунгалтын төлбөр хийв");
+        payLoanRequestCustom.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        payLoanRequestCustom.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        payLoanRequestCustom.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
+        payLoanRequestCustom.setIsTmw(Constants.DEFAULT_IS_TMW);
+        payLoanRequestCustom.setCurCode(Constants.DEFAULT_CUR_CODE);
+        payLoanRequestCustom.setContCurCode(Constants.DEFAULT_CUR_CODE);
+        payLoanRequestCustom.setTcustRegisterMask("3");
+        payLoanRequestCustom.setIdentityType("MANUAL");
+        payLoanRequestCustom.setTranCurCode(Constants.DEFAULT_CUR_CODE);
+
+        List<PayLoanCustomAddParam> addParams = new ArrayList<>();
+        PayLoanCustomAddParam payLoanCustomAddParam = new PayLoanCustomAddParam();
+        payLoanCustomAddParam.setContAcntType("BAC");
+        payLoanCustomAddParam.setPrincPayAmt(payDigitalLoanRequestDto.getPrincPayAmt());
+        payLoanCustomAddParam.setBillIntPayAmt(payDigitalLoanRequestDto.getBillIntPayAmt());
+        payLoanCustomAddParam.setIntPayAmt(payDigitalLoanRequestDto.getIntPayAmt());
+        payLoanCustomAddParam.setFinePayAmt(payDigitalLoanRequestDto.getFinePayAmt());
+        payLoanCustomAddParam.setBillFinepBal(payDigitalLoanRequestDto.getBillFinepBal());
+        payLoanCustomAddParam.setBillFinebBal(payDigitalLoanRequestDto.getBillFinebBal());
+        payLoanCustomAddParam.setBillCommIntPayAmt(payDigitalLoanRequestDto.getBillCommIntPayAmt());
+        payLoanCustomAddParam.setCommIntPayAmt(payDigitalLoanRequestDto.getCommIntPayAmt());
+        addParams.add(payLoanCustomAddParam);
+        payLoanRequestCustom.setAddParams(addParams);
+        return polarisClient.payDigitalLoanCustom(payLoanRequestCustom);
+    }
+
     // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
     public DepositTdAccountResponseDto payDigitalLoan(PayLoanRequestDto payLoanRequestDto) {
         PayLoanRequest payLoanRequest = new PayLoanRequest();
@@ -566,25 +605,32 @@ public class LoanService {
     }
 
     public CustomResponseDto editLoanAccountRepaymentNrs(EditRepaymentRequestDto editRepaymentRequestDto) {
-        EditRepaymentRequest editRepaymentRequest = new EditRepaymentRequest();
-        editRepaymentRequest.setAcntCode(editRepaymentRequestDto.getAcntCode());
-        editRepaymentRequest.setCalcAmt(editRepaymentRequestDto.getCalcAmt());
-        editRepaymentRequest.setPayType(editRepaymentRequestDto.getPayType());
-        editRepaymentRequest.setPayFreq(editRepaymentRequestDto.getPayFreq());
-        editRepaymentRequest.setPayMonth(null);
-        editRepaymentRequest.setPayDay1(editRepaymentRequestDto.getPayDay1());
-        editRepaymentRequest.setPayDay2(null);
-        editRepaymentRequest.setHolidayOption(null);
-        editRepaymentRequest.setShiftPartialPay(0);
-        editRepaymentRequest.setShiftType(null);
-        editRepaymentRequest.setTermFreeTimes(0);
-        editRepaymentRequest.setIntTypeCode("SIMPLE_INT");
-        editRepaymentRequest.setStartDate(getSystemDateInStringObject());
-        editRepaymentRequest.setEndDate(editRepaymentRequestDto.getEndDate());
-        editRepaymentRequest.setAdvDate(null);
-        editRepaymentRequest.setDescription(editRepaymentRequestDto.getDescription());
-        editRepaymentRequest.setEscapeMonths(null);
-        polarisClient.editLoanAccountRepaymentNrs(editRepaymentRequest);
+        List<String> test = new ArrayList<>();
+        EditDigitalRepaymentRequest editDigitalRepaymentRequest = new EditDigitalRepaymentRequest();
+        editDigitalRepaymentRequest.setAcntCode(editRepaymentRequestDto.getAcntCode());
+        editDigitalRepaymentRequest.setCalcAmt(editRepaymentRequestDto.getCalcAmt());
+        editDigitalRepaymentRequest.setPayType(editRepaymentRequestDto.getPayType());
+        editDigitalRepaymentRequest.setPayFreq(editRepaymentRequestDto.getPayFreq());
+        editDigitalRepaymentRequest.setPayMonth(null);
+        editDigitalRepaymentRequest.setPayDay1(editRepaymentRequestDto.getPayDay1());
+        // editDigitalRepaymentRequest.setPayDay1(LocalDate.parse(getSystemDateInStringObject()).getDayOfMonth());
+
+        editDigitalRepaymentRequest.setPayDay2(null);
+        editDigitalRepaymentRequest.setHolidayOption("2");
+        editDigitalRepaymentRequest.setShiftPartialPay("0");
+        editDigitalRepaymentRequest.setShiftType(null);
+        editDigitalRepaymentRequest.setTermFreeTimes(0);
+        editDigitalRepaymentRequest.setIntTypeCode("SIMPLE_INT");
+        editDigitalRepaymentRequest.setStartDate(editRepaymentRequestDto.getStartDate());
+        // editDigitalRepaymentRequest.setStartDate("2026-01-19 00:00:00");
+        editDigitalRepaymentRequest.setEndDate(editRepaymentRequestDto.getEndDate());
+        // editDigitalRepaymentRequest.setEndDate(LocalDate.parse(getSystemDateInStringObject()).plusDays(30).toString());
+
+        editDigitalRepaymentRequest.setAdvDate(null);
+        editDigitalRepaymentRequest.setDescription(editRepaymentRequestDto.getDescription());
+        editDigitalRepaymentRequest.setEscapeMonths(test);
+        editDigitalRepaymentRequest.setListNrs(test);
+        polarisClient.editLoanAccountRepaymentNrs(editDigitalRepaymentRequest);
         return new CustomResponseDto("Амжилттай!");
     }
 
