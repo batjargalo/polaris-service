@@ -218,6 +218,7 @@ public class LoanService {
         loanAccountDetailDto.setBillBaseintBal(loanAccount.getBillBaseintBal());
         loanAccountDetailDto.setBillFinepBal(loanAccount.getBillFinepBal());
         loanAccountDetailDto.setBillFinebBal(loanAccount.getBillFinebBal());
+        loanAccountDetailDto.setLastBillNo(loanAccount.getLastBillNo());
         return loanAccountDetailDto;
     }
 
@@ -632,6 +633,33 @@ public class LoanService {
         editDigitalRepaymentRequest.setListNrs(test);
         polarisClient.editLoanAccountRepaymentNrs(editDigitalRepaymentRequest);
         return new CustomResponseDto("Амжилттай!");
+    }
+
+    // Edit Payment Bill
+    public LoanExtendPResponse editLoanBill(EditBillRequestDto editBillRequestDto) {
+        LoanBillrepaymentRequest loanBillrepaymentRequest = new LoanBillrepaymentRequest();
+        loanBillrepaymentRequest.setOperCode("13610272");
+        loanBillrepaymentRequest.setTxnAcntCode(editBillRequestDto.getAcntCode());
+        loanBillrepaymentRequest.setTxnAmount(editBillRequestDto.getTxnAmount());
+        loanBillrepaymentRequest.setTxnDesc("Дижитал зээл сунгах");
+        loanBillrepaymentRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        loanBillrepaymentRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        loanBillrepaymentRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
+
+        List<AspParam> aspParams = Utils.getAspParamsBill(editBillRequestDto.getAcntCode(), 13600107);
+
+        List<AddParamsBill> addParams = new ArrayList<>();
+        AddParamsBill loanBillAddParam = new AddParamsBill();
+        loanBillAddParam.setBillNo(editBillRequestDto.getBillNo());
+        loanBillAddParam.setContIsAcrInt(0);
+        addParams.add(loanBillAddParam);
+        loanBillrepaymentRequest.setAddParams(addParams);
+        loanBillrepaymentRequest.setAspParam(aspParams);
+
+        loanBillrepaymentRequest.setIdentityType("");
+        loanBillrepaymentRequest.setScrCode(Constants.DEFAULT_SOURCE_TYPE);
+
+        return polarisClient.loanBillrepayment(loanBillrepaymentRequest);
     }
 
     // region Зээлийн эргэн төлөлтийн хуваарь үүсгэх

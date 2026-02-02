@@ -144,6 +144,14 @@ public class LoanController {
     }
     // endregion
 
+    // region ПОЛАРИСРУУ Билл Залруулах
+    @PostMapping(path = "/edit/bill")
+    @Operation(summary = " Үндсэн зээлийн билл залруулах")
+    public LoanExtendPResponse editLoanBillAccountRepayment(@RequestBody @Valid EditBillRequestDto dto) {
+        return loanService.editLoanBill(dto);
+    }
+    // endregion
+
     @PostMapping(path = "/calculate/repayment")
     @Operation(summary = "Зээлийн эргэн төлөлтийн хуваарь тооцоолох")
     public NRSListResponseDto calculateLoanAccountRepayment(@RequestBody @Valid CalculateRepaymentRequestDto dto) {
