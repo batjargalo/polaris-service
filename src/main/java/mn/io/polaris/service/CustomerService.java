@@ -5,14 +5,19 @@ import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import mn.io.polaris.constant.Constants;
 import mn.io.polaris.model.polaris.*;
+import mn.io.polaris.model.polaris.request.GetLoanBillList;
+import mn.io.polaris.model.polaris.request.GetLoanBillListParams;
+import mn.io.polaris.model.polaris.request.GetLoanBillListParams2;
 import mn.io.polaris.model.polaris.request.GetLoanList;
 import mn.io.polaris.model.polaris.request.GetLoanListCust;
 import mn.io.polaris.model.polaris.request.GetLoanListParams;
 import mn.io.polaris.model.polaris.request.GetLoanListProd;
+import mn.io.polaris.model.polaris.response.LoanAcntBillListResponse;
 import mn.io.polaris.model.polaris.response.LoanAcntListResponse;
 import mn.io.polaris.model.request.*;
 import mn.io.polaris.model.response.AccountDto;
 import mn.io.polaris.model.response.LoanAccountBalance;
+import mn.io.polaris.model.response.LoanAccountBill;
 import mn.io.polaris.remote.PolarisClient;
 
 import org.json.JSONArray;
@@ -144,6 +149,74 @@ public class CustomerService {
         accountDto.setJointTypeCode(a.getJointTypeCode());
         accountDto.setCurCode(a.getCurCode());
         accountDto.setStatus(a.getStatus());
+
+        return accountDto;
+    }
+
+    // endregion
+
+    // region Зээлийн дансны биллийн жагсаалт Munkh
+
+    public List<LoanAccountBill> getLoanBillList(LoanAccountListBillRequest loanAccountListRequest) {
+
+        GetLoanBillList loanList = new GetLoanBillList();
+
+        // Third condition
+        GetLoanBillListParams para = new GetLoanBillListParams();
+        para._iField = "IS_COMPLETED";
+        para._iOperation = "=";
+        para._iType = 1;
+        para._iValue = 0;
+
+        GetLoanBillListParams2 para2 = new GetLoanBillListParams2();
+        para2._iField = "ACNT_CODE";
+        para2._iOperation = "=";
+        para2._iType = 3;
+        para2._iValue = (loanAccountListRequest.getAcntCode());
+
+        loanList.addToParams(para, "anotherValue");
+        loanList.addToParams2(para2, "anotherValue");
+        loanList.setPageNumber(0);
+        loanList.setPageSize(25);
+
+        List<LoanAcntBillListResponse> loanAcntresponse = polarisClient.getLoanBillList(loanList);
+        List<LoanAccountBill> returnList = new ArrayList<>();
+        for (LoanAcntBillListResponse a : loanAcntresponse) {
+            LoanAccountBill laBalance = converterLoanBillList(a);
+            returnList.add(laBalance);
+
+        }
+        return returnList;
+    }
+
+    public LoanAccountBill converterLoanBillList(LoanAcntBillListResponse a) {
+        LoanAccountBill accountDto = new LoanAccountBill();
+        // accountDto.setAcntCode(a.getAcntCode());
+        // accountDto.setBalance(a.getBalance());
+
+        accountDto.setCompanyCode(a.getCompanyCode());
+        accountDto.setPaidAmountReal(a.getPaidAmountReal());
+        accountDto.setBillTypeCode(a.getBillTypeCode());
+        accountDto.setSysNo(a.getSysNo());
+        accountDto.setAcntName(a.getAcntName());
+        accountDto.setTotalBalance(a.getTotalBalance());
+        accountDto.setAcntCode(a.getAcntCode());
+        accountDto.setFinePaidAmount(a.getFinePaidAmount());
+        accountDto.setBillAmountReal(a.getBillAmountReal());
+        accountDto.setBillDate(a.getBillDate());
+        accountDto.setCustCode(a.getCustCode());
+        accountDto.setBillAmount(a.getBillAmount());
+        accountDto.setSysName(a.getSysName());
+        accountDto.setFineAmount(a.getFineAmount());
+        accountDto.setFinePaidAmount(a.getFinePaidAmount());
+        accountDto.setCurCode(a.getCurCode());
+        accountDto.setFineGraceDay(a.getFineGraceDay());
+        accountDto.setBillTypeName(a.getBillTypeName());
+        accountDto.setRn(a.getRn());
+        accountDto.setBillNo(a.getBillNo());
+        accountDto.setPaidAmount(a.getPaidAmount());
+        accountDto.setFineLastAccrualDate(a.getFineLastAccrualDate());
+        accountDto.setIsCompleted(a.getIsCompleted());
 
         return accountDto;
     }

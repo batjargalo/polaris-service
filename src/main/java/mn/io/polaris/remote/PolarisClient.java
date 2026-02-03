@@ -14,12 +14,14 @@ import mn.io.polaris.model.polaris.request.*;
 import mn.io.polaris.model.polaris.response.BacAcntBalance;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.polaris.response.LoanAccountResponse;
+import mn.io.polaris.model.polaris.response.LoanAcntBillListResponse;
 import mn.io.polaris.model.polaris.response.LoanAcntListResponse;
 import mn.io.polaris.model.polaris.response.LoanExtendPResponse;
 import mn.io.polaris.model.polaris.response.ParameterResponse;
 import mn.io.polaris.model.polaris.response.TempAccount;
 import mn.io.polaris.model.request.*;
 import mn.io.polaris.model.response.LoanAccountBalance;
+import mn.io.polaris.model.response.LoanExtensionResponse;
 import mn.io.polaris.repository.PolarisDaoRepository;
 import mn.io.polaris.repository.SystemDaoRepository;
 
@@ -131,6 +133,62 @@ public class PolarisClient {
         String json = jsonArray.toString();
         System.out.println(json); // Output: ["reading","coding"]
         Gson gson = new Gson();
+        String responseBody = sendRequest(new HttpEntity<>(gson.toJson(array), headers));
+
+        System.out.println(responseBody); // Output: ["reading","coding"]
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+                    mapper.readValue(responseBody, new TypeReference<>() {
+                    })));
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    // endregion
+
+    // region Зээлийн дансны биллийн жагсаалт Munkh
+
+    public List<LoanAcntBillListResponse> getLoanBillList(GetLoanBillList getLoanList) {
+        List<Object> array = new ArrayList<>();
+        List<Map<String, Object>> filters = new ArrayList<>();
+        for (Map.Entry<GetLoanBillListParams, Object> entry : getLoanList.getParams().entrySet()) {
+            Map<String, Object> filter = new HashMap<>();
+            filter.put("_iField", entry.getKey()._iField);
+            filter.put("_iOperation", entry.getKey()._iOperation);
+            filter.put("_iType", entry.getKey()._iType);
+            filter.put("_iValue", entry.getKey()._iValue);
+            filters.add(filter);
+        }
+        // List<Map<String, Object>> filters2 = new ArrayList<>();
+        for (Map.Entry<GetLoanBillListParams2, Object> entry : getLoanList.getParams2().entrySet()) {
+            Map<String, Object> filter = new HashMap<>();
+            filter.put("_iField", entry.getKey()._iField);
+            filter.put("_iOperation", entry.getKey()._iOperation);
+            filter.put("_iType", entry.getKey()._iType);
+            filter.put("_iValue", entry.getKey()._iValue);
+            filters.add(filter);
+        }
+
+        array.add(filters);
+        // array.add(filters2);
+        array.add(getLoanList.getPageNumber());
+        array.add(getLoanList.getPageSize());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610295");
+
+        JSONArray jsonArray = new JSONArray(array);
+        String json = jsonArray.toString();
+        System.out.println(json); // Output: ["reading","coding"]
+        // Gson gson = new Gson();
+
+        Gson gson = new GsonBuilder()
+                .disableHtmlEscaping() // This prevents converting "=" to "\u003d"
+                .create();
+
         String responseBody = sendRequest(new HttpEntity<>(gson.toJson(array), headers));
 
         System.out.println(responseBody); // Output: ["reading","coding"]
@@ -598,6 +656,14 @@ public class PolarisClient {
         return getDepositTdAccountResponseDto(array, headers);
     }
 
+    public DepositTdAccountResponseDto payDigitalLoanCustom(PayLoanRequestCustom payLoanRequestCustom) {
+        List<Object> array = new ArrayList<>();
+        array.add(payLoanRequestCustom.toJsonStringSelf());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13611311");
+        return getDepositTdAccountResponseDto(array, headers);
+    }
+
     public DepositTdAccountResponseDto closeLoan(CloseLoanRequest closeLoanRequest) {
         List<Object> array = new ArrayList<>();
         array.add(closeLoanRequest.toJsonStringSelf());
@@ -781,6 +847,29 @@ public class PolarisClient {
         return getDepositTdAccountResponseDto(array, headers);
     }
 
+    private LoanExtendPResponse getLoanBillAccountResponseDto(List<Object> array, HttpHeaders headers) {
+        LoanExtendPResponse loanExtendPResponse;
+        String responseBody = sendRequest(createHttpEntity(array, headers));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            loanExtendPResponse = mapper.readValue(
+                    responseBody,
+                    LoanExtendPResponse.class);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return loanExtendPResponse;
+    }
+
+    public LoanExtendPResponse loanBillrepayment(LoanBillrepaymentRequest loanBillrepaymentRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(loanBillrepaymentRequest.toJsonString());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610272");
+        return getLoanBillAccountResponseDto(array, headers);
+    }
+
     public List<ParameterResponse> getParamList(ParameterRequest parameterRequest) {
         List<List<String>> array = new ArrayList<>();
         array.add(parameterRequest.getDictList());
@@ -916,9 +1005,27 @@ public class PolarisClient {
         sendRequest(createHttpEntity(array, headers));
     }
 
-    public void editLoanAccountRepaymentNrs(EditRepaymentRequest editRepaymentRequest) {
+    public void editLoanAccountRepaymentNrs(EditDigitalRepaymentRequest editDigitalRepaymentRequest) {
         List<Object> array = new ArrayList<>();
-        array.add(editRepaymentRequest.toJsonStringSelf());
+        array.add('"' + editDigitalRepaymentRequest.getAcntCode() + '"');
+        array.add('"' + editDigitalRepaymentRequest.getStartDate() + '"');
+        array.add(editDigitalRepaymentRequest.getCalcAmt());
+        array.add(editDigitalRepaymentRequest.getPayType());
+        array.add('"' + editDigitalRepaymentRequest.getPayFreq() + '"');
+        array.add(editDigitalRepaymentRequest.getPayMonth());
+        array.add(editDigitalRepaymentRequest.getPayDay1());
+        array.add(editDigitalRepaymentRequest.getPayDay2());
+        array.add(editDigitalRepaymentRequest.getHolidayOption());
+        array.add(editDigitalRepaymentRequest.getShiftPartialPay());
+        array.add(editDigitalRepaymentRequest.getShiftType());
+        array.add(editDigitalRepaymentRequest.getTermFreeTimes());
+        array.add('"' + editDigitalRepaymentRequest.getIntTypeCode() + '"');
+        array.add('"' + editDigitalRepaymentRequest.getEndDate() + '"');
+        array.add(editDigitalRepaymentRequest.getAdvDate());
+        array.add('"' + editDigitalRepaymentRequest.getDescription() + '"');
+        array.add(editDigitalRepaymentRequest.getEscapeMonths());
+        array.add(editDigitalRepaymentRequest.getListNrs());
+
         HttpHeaders headers = setPolarisHeaders();
         headers.add("op", "13610259");
         sendRequest(createHttpEntity(array, headers));
@@ -954,11 +1061,11 @@ public class PolarisClient {
     // endregion
     public NRSListResponseDto calculateLoanAccountRepayment(CalculateRepaymentRequest calculateRepaymentRequest) {
         List<Object> array = new ArrayList<>();
-        array.add(calculateRepaymentRequest.getAcntCode());
-        array.add(calculateRepaymentRequest.getStartDate());
+        array.add('"' + calculateRepaymentRequest.getAcntCode() + '"');
+        array.add('"' + calculateRepaymentRequest.getStartDate() + '"');
         array.add(calculateRepaymentRequest.getCalcAmt());
-        array.add(calculateRepaymentRequest.getPayType());
-        array.add(calculateRepaymentRequest.getPayFreq());
+        array.add('"' + calculateRepaymentRequest.getPayType() + '"');
+        array.add('"' + calculateRepaymentRequest.getPayFreq() + '"');
         array.add(calculateRepaymentRequest.getPayMonth());
         array.add(calculateRepaymentRequest.getPayDay1());
         array.add(calculateRepaymentRequest.getPayDay2());
@@ -966,8 +1073,8 @@ public class PolarisClient {
         array.add(calculateRepaymentRequest.getShiftPartialPay());
         array.add(calculateRepaymentRequest.getShiftType());
         array.add(calculateRepaymentRequest.getTermFreeTimes());
-        array.add(calculateRepaymentRequest.getIntTypeCode());
-        array.add(calculateRepaymentRequest.getEndDate());
+        array.add('"' + calculateRepaymentRequest.getIntTypeCode() + '"');
+        array.add('"' + calculateRepaymentRequest.getEndDate() + '"');
         array.add(calculateRepaymentRequest.getAdvDate());
         array.add(calculateRepaymentRequest.getEscapeMonths());
         array.add(calculateRepaymentRequest.getListNrs());

@@ -8,6 +8,7 @@ import mn.io.polaris.model.polaris.*;
 import mn.io.polaris.model.request.*;
 import mn.io.polaris.model.response.AccountDto;
 import mn.io.polaris.model.response.LoanAccountBalance;
+import mn.io.polaris.model.response.LoanAccountBill;
 import mn.io.polaris.service.CustomerService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,16 @@ public class CustomerController {
     public List<LoanAccountBalance> getLoanOpenListByProd(
             @RequestBody @Valid LoanAccountListRequest loanAccountListRequest) {
         return customerService.getLoanOpenListByProd(loanAccountListRequest);
+    }
+    // endregion
+
+    // region Зээлийн дансны Биллийн жагсаалт Munkh
+
+    @PostMapping(path = "/bill/list")
+    @Operation(summary = "Нээлттэй зээлийн дансны биллийн жагсаалт")
+    public List<LoanAccountBill> getLoanBillList(
+            @RequestBody @Valid LoanAccountListBillRequest loanAccountListRequest) {
+        return customerService.getLoanBillList(loanAccountListRequest);
     }
     // endregion
 

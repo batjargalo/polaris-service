@@ -69,6 +69,13 @@ public class LoanController {
         return loanService.payLoan(payLoanRequestDto);
     }
 
+    @PostMapping(path = "/digital-pay-custom")
+    @Operation(summary = "Зээл бэлэн бусаар төлөх (гараар хуваарилж)")
+    public DepositTdAccountResponseDto payDigitalLoanCustom(
+            @RequestBody @Valid PayDigitalLoanRequestDto payDigitalLoanRequestDto) {
+        return loanService.payDigitalLoanCustom(payDigitalLoanRequestDto);
+    }
+
     // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
     @PostMapping(path = "/digital-pay")
     @Operation(summary = "Цахим зээл төлөлт")
@@ -134,6 +141,14 @@ public class LoanController {
     @Operation(summary = "Хур.хүүг дараагийн төлөлтөнд оруулах эсэх чектэйгээр төлбөрийн хуваарь засварлах")
     public CustomResponseDto editLoanAccountRepaymentNrs(@RequestBody @Valid EditRepaymentRequestDto dto) {
         return loanService.editLoanAccountRepaymentNrs(dto);
+    }
+    // endregion
+
+    // region ПОЛАРИСРУУ Билл Залруулах
+    @PostMapping(path = "/edit/bill")
+    @Operation(summary = " Үндсэн зээлийн билл залруулах")
+    public LoanExtendPResponse editLoanBillAccountRepayment(@RequestBody @Valid EditBillRequestDto dto) {
+        return loanService.editLoanBill(dto);
     }
     // endregion
 

@@ -99,4 +99,7 @@ public class LoanAccountDetailDto {
     @Schema(description = "Үндсэн хүүнээс бодсон торгуулийн хүүгийн дүн")
     private BigDecimal billFinebBal;
 
+    @Schema(description = "Зээлийн дансны биллинг сүүлийн орон")
+    private Integer lastBillNo;
+
 }
