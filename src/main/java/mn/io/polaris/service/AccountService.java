@@ -89,6 +89,9 @@ public class AccountService {
         AccountNo tdAccountNo = this.createTdAccount(accountTdCreateRequest);
         log.info("Хадгаламжийн данс амжилттай үүссэн: " + tdAccountNo.getAcntCode());
 
+        this.changeTdAccountStatus(tdAccountNo.getAcntCode());
+        log.info("Хадгаламжийн дансны төлөв амжилттай солигдсон.");
+
         // this.changeTdAccountStatus(tdAccountNo.getAcntCode());
         // log.info("Хадгаламжийн дансны төлөв амжилттай нээгдсэн.");
 

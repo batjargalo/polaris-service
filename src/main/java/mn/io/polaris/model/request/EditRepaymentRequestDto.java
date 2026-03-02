@@ -19,7 +19,7 @@ public class EditRepaymentRequestDto {
     private String payFreq;
     @NotNull
     private Integer payDay1;
-    @NotEmpty
+    // @NotEmpty
     private String startDate;
     @NotEmpty
     private String endDate;
