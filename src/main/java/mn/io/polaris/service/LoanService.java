@@ -334,6 +334,13 @@ public class LoanService {
     }
     // endregion
 
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ ЗМС илгээхгүй болгох
+    public LoanAccountResponse zmsNotSend(ZmsNotSendRequest zmsNotSendRequest) {
+
+        return polarisClient.zmsNotSend(zmsNotSendRequest);
+    }
+    // endregion
+
     public DepositTdAccountResponseDto closeLoan(PayLoanRequestDto payLoanRequestDto) {
         CloseLoanRequest payLoanRequest = new CloseLoanRequest();
         BigDecimal rate = Constants.DEFAULT_RATE;
