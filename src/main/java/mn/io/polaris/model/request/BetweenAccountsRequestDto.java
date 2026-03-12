@@ -18,6 +18,7 @@ public class BetweenAccountsRequestDto {
     public enum TxnType {
         LOAN,
         TD,
-        DAN
+        DAN,
+        LIMIT
     }
 }

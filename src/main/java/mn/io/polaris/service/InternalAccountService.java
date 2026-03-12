@@ -26,6 +26,9 @@ public class InternalAccountService {
     @Value("${qpay.loan.acc}")
     private String qpayLoanAccount;
 
+    @Value("${qpay.digital.collect.acc}")
+    private String qpayDigitalCollectAcc;
+
     @Value("${qpay.td.acc}")
     private String qpayTdAccount;
 
@@ -77,6 +80,8 @@ public class InternalAccountService {
             betweenAccountsRequest.setTxnAcntCode(qpayTdAccount);
         } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.DAN)) {
             betweenAccountsRequest.setTxnAcntCode(qpayDANAccount);
+        } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.LIMIT)) {
+            betweenAccountsRequest.setTxnAcntCode(qpayDigitalCollectAcc);
         }
         betweenAccountsRequest.setTxnAmount(betweenAccountsRequestDto.getTxnAmount());
         betweenAccountsRequest.setRate(rate);
