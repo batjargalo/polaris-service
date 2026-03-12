@@ -84,6 +84,14 @@ public class LoanController {
     }
     // endregion
 
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ ЗМС илгээх чек засах
+    @PostMapping(path = "/zms-not-send")
+    @Operation(summary = "Зээл ЭМС илгээхгүй болгох")
+    public LoanAccountResponse zmsNotSend(@RequestBody @Valid ZmsNotSendRequest zmsNotSendRequest) {
+        return loanService.zmsNotSend(zmsNotSendRequest);
+    }
+    // endregion
+
     @PostMapping(path = "/close")
     @Operation(summary = "Зээлийн данс хаах (Бэлэн бус)")
     public DepositTdAccountResponseDto closeLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {

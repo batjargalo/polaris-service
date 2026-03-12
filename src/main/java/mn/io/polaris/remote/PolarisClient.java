@@ -648,12 +648,36 @@ public class PolarisClient {
         return depositTdAccountResponseDto;
     }
 
+    private LoanAccountResponse getZmsNotSendResponseDto(List<Object> array, HttpHeaders headers,
+            ZmsNotSendRequest zmsNotSendRequest) {
+        LoanAccountResponse test = new LoanAccountResponse();
+        test.setAcntCode(zmsNotSendRequest.getAcntCode());
+        String responseBody = sendRequest(createHttpEntity(array, headers));
+        try {
+            if (responseBody.trim().isEmpty()) {
+                test.setAcntCode(zmsNotSendRequest.getAcntCode());
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        return test;
+    }
+
     public DepositTdAccountResponseDto payLoan(PayLoanRequest payLoanRequest) {
         List<Object> array = new ArrayList<>();
         array.add(payLoanRequest.toJsonStringSelf());
         HttpHeaders headers = setPolarisHeaders();
         headers.add("op", "13610250");
         return getDepositTdAccountResponseDto(array, headers);
+    }
+
+    public LoanAccountResponse zmsNotSend(ZmsNotSendRequest zmsNotSendRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(zmsNotSendRequest.getAcntCode());
+        array.add(zmsNotSendRequest.getSend_option());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13614449");
+        return getZmsNotSendResponseDto(array, headers, zmsNotSendRequest);
     }
 
     public DepositTdAccountResponseDto payDigitalLoanCustom(PayLoanRequestCustom payLoanRequestCustom) {
