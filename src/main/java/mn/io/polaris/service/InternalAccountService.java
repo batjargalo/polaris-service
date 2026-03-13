@@ -99,6 +99,33 @@ public class InternalAccountService {
         return polarisClient.betweenAccounts(betweenAccountsRequest);
     }
 
+    // region Digital dotood
+    public DepositTdAccountResponseDto digitalbetweenAccounts(BetweenAccountsRequestDto betweenAccountsRequestDto) {
+        BetweenAccountsRequest betweenAccountsRequest = new BetweenAccountsRequest();
+        BigDecimal rate = Constants.DEFAULT_RATE;
+        if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.DAN)) {
+            betweenAccountsRequest.setContAcntCode(qpayDANAccount);
+            betweenAccountsRequest.setTcustRegister("Зээлийн лимит шимтгэл 2700");
+        } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.LIMIT)) {
+            betweenAccountsRequest.setContAcntCode(qpayDigitalCollectAcc);
+            betweenAccountsRequest.setTcustRegister("Зээлийн лимит шимтгэл 300");
+        }
+        betweenAccountsRequest.setTxnAmount(betweenAccountsRequestDto.getTxnAmount());
+        betweenAccountsRequest.setRate(rate);
+        betweenAccountsRequest.setTxnAcntCode(qpayCollectAccount);
+        betweenAccountsRequest.setContAmount(betweenAccountsRequestDto.getTxnAmount());
+        betweenAccountsRequest.setContRate(rate);
+        betweenAccountsRequest.setTxnDesc(betweenAccountsRequestDto.getTxnDesc());
+        betweenAccountsRequest.setTcustRegisterMask("4");
+        betweenAccountsRequest.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
+        betweenAccountsRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        betweenAccountsRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        betweenAccountsRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
+        betweenAccountsRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
+        return polarisClient.betweenAccounts(betweenAccountsRequest);
+    }
+
+    // endregion
     public DepositTdAccountResponseDto loanBetweenAccounts(
             LoanBetweenAccountsRequestDto loanBetweenAccountsRequestDto) {
         BigDecimal rate = Constants.DEFAULT_RATE;
