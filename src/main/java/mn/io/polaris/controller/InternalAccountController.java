@@ -40,6 +40,15 @@ public class InternalAccountController {
         return internalAccountService.betweenAccounts(betweenAccountsRequestDto);
     }
 
+    // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт
+    @PostMapping(path = "/digital-between-accounts")
+    @Operation(summary = "Дотоодын данснаас дотоод данс руу шилжүүлэг digital")
+    public DepositTdAccountResponseDto digitalbetweenAccounts(
+            @RequestBody @Valid BetweenAccountsRequestDto betweenAccountsRequestDto) {
+        return internalAccountService.digitalbetweenAccounts(betweenAccountsRequestDto);
+    }
+    // endregion
+
     @PostMapping(path = "/loan-non-cash")
     @Operation(summary = "Зээл олгох - Бэлэн бус")
     public DepositTdAccountResponseDto loanNonCash(@RequestBody @Valid LoanNonCashRequestDto loanNonCashRequestDto) {
