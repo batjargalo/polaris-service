@@ -44,6 +44,9 @@ public class InternalAccountService {
     @Value("${cgw.digitalloan.allowance.acc}")
     private String cgwDigitalLoanAllowanceAccount;
 
+    @Value("${qpay.loan.digital.acc}")
+    private String qpayKhaanAccount;
+
     @Resource
     private PolarisClient polarisClient;
 
@@ -112,7 +115,7 @@ public class InternalAccountService {
         }
         betweenAccountsRequest.setTxnAmount(betweenAccountsRequestDto.getTxnAmount());
         betweenAccountsRequest.setRate(rate);
-        betweenAccountsRequest.setTxnAcntCode(qpayCollectAccount);
+        betweenAccountsRequest.setTxnAcntCode(qpayKhaanAccount);
         betweenAccountsRequest.setContAmount(betweenAccountsRequestDto.getTxnAmount());
         betweenAccountsRequest.setContRate(rate);
         betweenAccountsRequest.setTxnDesc(betweenAccountsRequestDto.getTxnDesc());
