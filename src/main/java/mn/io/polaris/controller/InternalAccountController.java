@@ -8,6 +8,7 @@ import mn.io.polaris.model.polaris.response.BacAcntBalance;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.request.BacAcntCode;
 import mn.io.polaris.model.request.BetweenAccountsRequestDto;
+import mn.io.polaris.model.request.BetweenAccountsRequestLisingDto;
 import mn.io.polaris.model.request.DepositTdAccountRequestDto;
 import mn.io.polaris.model.request.LoanBetweenAccountsRequestDto;
 import mn.io.polaris.model.request.LoanNonCashRequestDto;
@@ -38,6 +39,13 @@ public class InternalAccountController {
     public DepositTdAccountResponseDto betweenAccounts(
             @RequestBody @Valid BetweenAccountsRequestDto betweenAccountsRequestDto) {
         return internalAccountService.betweenAccounts(betweenAccountsRequestDto);
+    }
+
+    @PostMapping(path = "/between-accounts-lising")
+    @Operation(summary = "Дотоодын данснаас дотоод данс руу шилжүүлэг")
+    public DepositTdAccountResponseDto betweenAccountsLising(
+            @RequestBody @Valid BetweenAccountsRequestLisingDto betweenAccountsRequestDto) {
+        return internalAccountService.betweenAccountsLising(betweenAccountsRequestDto);
     }
 
     // region ПОЛАРИСРУУ Цахим ЗЭЭЛ Төлөлт

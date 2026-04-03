@@ -8,5 +8,7 @@ public class AccountDto {
 
     @Schema(description = "Дансны дугаар")
     private String acntCode;
+    @Schema(description = "Компани код")
+    private String companyCode;
 
 }
