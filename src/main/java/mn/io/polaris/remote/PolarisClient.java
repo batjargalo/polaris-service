@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 import mn.io.polaris.model.dao.PolarisDao;
 import mn.io.polaris.model.dao.SystemDao;
+import mn.io.polaris.constant.Constants;
 import mn.io.polaris.model.polaris.*;
 import mn.io.polaris.model.polaris.request.*;
 import mn.io.polaris.model.polaris.response.BacAcntBalance;
@@ -61,6 +62,11 @@ public class PolarisClient {
         return systemDao.getValue();
     }
 
+    private String getCompanyLizing() {
+        SystemDao systemDao = systemDaoRepository.findById("POLARIS_COMPANY_LIZING").orElseThrow();
+        return systemDao.getValue();
+    }
+
     private String getCookie() {
         SystemDao systemDao = systemDaoRepository.findById("POLARIS_TOKEN").orElseThrow();
         return systemDao.getValue();
@@ -75,12 +81,39 @@ public class PolarisClient {
         return headers;
     }
 
+    public HttpHeaders setPolarisHeadersWithLizing() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add("Cookie", "NESSESSION=" + getCookie());
+        headers.add("role", getRole());
+        headers.add("company", getCompanyLizing());
+        return headers;
+    }
+
     public List<Account> getAccountList(AccountListRequest accountListRequest) {
         List<Object> array = new ArrayList<>();
         array.add(accountListRequest.getCustCode());
         array.add(accountListRequest.getPageNumber());
         array.add(accountListRequest.getPageSize());
         HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610312");
+        String responseBody = sendRequest(createHttpEntity(array, headers));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
+    // With Lizing
+    public List<Account> getAccountWithLizingList(AccountListRequest accountListRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(accountListRequest.getCustCode());
+        array.add(accountListRequest.getPageNumber());
+        array.add(accountListRequest.getPageSize());
+        HttpHeaders headers = setPolarisHeadersWithLizing();
         headers.add("op", "13610312");
         String responseBody = sendRequest(createHttpEntity(array, headers));
         ObjectMapper mapper = new ObjectMapper();
@@ -305,7 +338,12 @@ public class PolarisClient {
         List<Object> array = new ArrayList<>();
         array.add(infoRequest.getAcntCode());
         array.add(infoRequest.getGetWithSecure());
-        HttpHeaders headers = setPolarisHeaders();
+        HttpHeaders headers = new HttpHeaders();
+        if (String.valueOf(infoRequest.getCompanyCode()).equals(Constants.COMPANY_CODE)) {
+            headers = setPolarisHeaders();
+        } else if (String.valueOf(infoRequest.getCompanyCode()).equals(Constants.COMPANY_CODE_LIZING)) {
+            headers = setPolarisHeadersWithLizing();
+        }
         headers.add("op", "13610200");
         LoanAccount loanAccount;
         String responseBody = sendRequest(createHttpEntity(array, headers));
@@ -328,7 +366,13 @@ public class PolarisClient {
     public List<LoanRepayment> getLoanRepayment(LoanRepaymentRequest loanRepaymentRequest) {
         List<Object> array = new ArrayList<>();
         array.add(loanRepaymentRequest.getAcntCode());
-        HttpHeaders headers = setPolarisHeaders();
+        HttpHeaders headers = new HttpHeaders();
+        if (String.valueOf(loanRepaymentRequest.getCompanyCode()).equals(Constants.COMPANY_CODE)) {
+            headers = setPolarisHeaders();
+        } else if (String.valueOf(loanRepaymentRequest.getCompanyCode()).equals(Constants.COMPANY_CODE_LIZING)) {
+            headers = setPolarisHeadersWithLizing();
+        }
+
         headers.add("op", "13610203");
         String responseBody = sendRequest(createHttpEntity(array, headers));
         ObjectMapper mapper = new ObjectMapper();
@@ -359,7 +403,12 @@ public class PolarisClient {
         List<Object> array = new ArrayList<>();
         array.add(loanCloseRequest.getAcntCode());
         array.add(loanCloseRequest.getCloseDate());
-        HttpHeaders headers = setPolarisHeaders();
+        HttpHeaders headers = new HttpHeaders();
+        if (String.valueOf(loanCloseRequest.getCompanyCode()).equals(Constants.COMPANY_CODE)) {
+            headers = setPolarisHeaders();
+        } else if (String.valueOf(loanCloseRequest.getCompanyCode()).equals(Constants.COMPANY_CODE_LIZING)) {
+            headers = setPolarisHeadersWithLizing();
+        }
         headers.add("op", "13610266");
         LoanClose loanClose;
         String responseBody = sendRequest(createHttpEntity(array, headers));
@@ -671,6 +720,14 @@ public class PolarisClient {
         return getDepositTdAccountResponseDto(array, headers);
     }
 
+    public DepositTdAccountResponseDto payLisingLoan(PayLoanRequest payLoanRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(payLoanRequest.toJsonStringSelf());
+        HttpHeaders headers = setPolarisHeadersWithLizing();
+        headers.add("op", "13610250");
+        return getDepositTdAccountResponseDto(array, headers);
+    }
+
     public LoanAccountResponse zmsNotSend(ZmsNotSendRequest zmsNotSendRequest) {
         List<Object> array = new ArrayList<>();
         array.add(zmsNotSendRequest.getAcntCode());
@@ -692,6 +749,14 @@ public class PolarisClient {
         List<Object> array = new ArrayList<>();
         array.add(closeLoanRequest.toJsonStringSelf());
         HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610267");
+        return getDepositTdAccountResponseDto(array, headers);
+    }
+
+    public DepositTdAccountResponseDto closeLisingLoan(CloseLoanRequest closeLoanRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(closeLoanRequest.toJsonStringSelf());
+        HttpHeaders headers = setPolarisHeadersWithLizing();
         headers.add("op", "13610267");
         return getDepositTdAccountResponseDto(array, headers);
     }
@@ -1017,6 +1082,14 @@ public class PolarisClient {
         List<Object> array = new ArrayList<>();
         array.add(betweenAccountsRequest.toJsonString());
         HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610650");
+        return getDepositTdAccountResponseDto(array, headers);
+    }
+
+    public DepositTdAccountResponseDto betweenAccountsLising(BetweenAccountsRequest betweenAccountsRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(betweenAccountsRequest.toJsonString());
+        HttpHeaders headers = setPolarisHeadersWithLizing();
         headers.add("op", "13610650");
         return getDepositTdAccountResponseDto(array, headers);
     }

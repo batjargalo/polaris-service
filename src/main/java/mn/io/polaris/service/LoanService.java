@@ -42,10 +42,14 @@ public class LoanService {
     @Value("${qpay.loan.digital.acc}")
     private String qpayDigitalLoanAccount;
 
+    @Value("${qpay.cont.lising.acc}")
+    private String qpayLisingLoanAccount;
+
     public LoanAccountDetailDto getLoanInfo(InfoRequest infoRequest) {
         LoanAccount loanAccount = polarisClient.getLoanInfo(infoRequest);
         LoanRepaymentRequest loanRepaymentRequest = new LoanRepaymentRequest();
         loanRepaymentRequest.setAcntCode(infoRequest.getAcntCode());
+        loanRepaymentRequest.setCompanyCode(infoRequest.getCompanyCode());
         List<LoanRepayment> loanRepayments = polarisClient.getLoanRepayment(loanRepaymentRequest);
         int paymentCount = 0;
         int paidCount = 0;
@@ -69,6 +73,7 @@ public class LoanService {
         InfoRequest infoRequest = new InfoRequest();
         infoRequest.setAcntCode(loanRepaymentRequest.getAcntCode());
         infoRequest.setGetWithSecure(0);
+        infoRequest.setCompanyCode(loanRepaymentRequest.getCompanyCode());
         LoanAccount loanAccount = polarisClient.getLoanInfo(infoRequest);
         List<LoanRepayment> loanRepayments = polarisClient.getLoanRepayment(loanRepaymentRequest);
         if (loanRepayments != null && !loanRepayments.isEmpty()) {
@@ -166,6 +171,7 @@ public class LoanService {
         loanAccountDetailDto.setEndDate(loanAccount.getEndDate());
         loanAccountDetailDto.setStatus(loanAccount.getStatus());
         loanAccountDetailDto.setStatusName(loanAccount.getStatusName());
+        loanAccountDetailDto.setCompanyCode(loanAccount.getCompanyCode());
         loanAccountDetailDto.setTermBasis(loanAccount.getTermBasis());
         loanAccountDetailDto.setAcntManagerName(loanAccount.getAcntManagerName());
         loanAccountDetailDto.setRepayAcntCode(loanAccount.getRepayAcntCode());
@@ -194,6 +200,7 @@ public class LoanService {
             LoanCloseRequest loanCloseRequest = new LoanCloseRequest();
             loanCloseRequest.setCloseDate(Utils.changeDateToString(now, Constants.DATE_FORMAT_YYYY_MM_DD));
             loanCloseRequest.setAcntCode(loanAccountDetailDto.getAcntCode());
+            loanCloseRequest.setCompanyCode(loanAccountDetailDto.getCompanyCode());
             LoanClose loanClose = null;
             try {
                 loanClose = polarisClient.getCloseAmount(loanCloseRequest);
@@ -334,6 +341,32 @@ public class LoanService {
     }
     // endregion
 
+    // region ПОЛАРИСРУУ ЛИЗИНГ ЗЭЭЛ Төлөлт
+    public DepositTdAccountResponseDto payLisingLoan(PayLoanRequestDto payLoanRequestDto) {
+        PayLoanRequest payLoanRequest = new PayLoanRequest();
+        BigDecimal rate = Constants.DEFAULT_RATE;
+        String contAcntCode = qpayLisingLoanAccount;
+        payLoanRequest.setTxnAcntCode(payLoanRequestDto.getTxnAcntCode());
+        payLoanRequest.setTxnAmount(payLoanRequestDto.getTxnAmount());
+        payLoanRequest.setContAmount(payLoanRequestDto.getTxnAmount());
+        payLoanRequest.setRate(rate);
+        payLoanRequest.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
+        payLoanRequest.setContAcntCode(contAcntCode);
+        payLoanRequest.setContRate(rate);
+        payLoanRequest.setTxnDesc("Зээл төлөв");
+        payLoanRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        payLoanRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        payLoanRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
+        payLoanRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
+        List<PayLoanAddParam> addParams = new ArrayList<>();
+        PayLoanAddParam payLoanAddParam = new PayLoanAddParam();
+        payLoanAddParam.setContAcntType("BAC");
+        addParams.add(payLoanAddParam);
+        payLoanRequest.setAddParams(addParams);
+        return polarisClient.payLisingLoan(payLoanRequest);
+    }
+    // endregion
+
     // region ПОЛАРИСРУУ Цахим ЗЭЭЛ ЗМС илгээхгүй болгох
     public LoanAccountResponse zmsNotSend(ZmsNotSendRequest zmsNotSendRequest) {
 
@@ -398,6 +431,37 @@ public class LoanService {
         addParams.add(closeLoanAddParam);
         payLoanRequest.setAddParams(addParams);
         return polarisClient.closeLoan(payLoanRequest);
+    }
+    // endregion
+
+    // region ПОЛАРИСРУУ Лизинг ЗЭЭЛ Хаах
+    public DepositTdAccountResponseDto closeLisingLoan(PayLoanRequestDto payLoanRequestDto) {
+        CloseLoanRequest payLoanRequest = new CloseLoanRequest();
+        BigDecimal rate = Constants.DEFAULT_RATE;
+        String contAcntCode = qpayLisingLoanAccount;
+        payLoanRequest.setTxnAcntCode(payLoanRequestDto.getTxnAcntCode());
+        payLoanRequest.setTxnAmount(payLoanRequestDto.getTxnAmount());
+        payLoanRequest.setCurCode(Constants.DEFAULT_CUR_CODE);
+        payLoanRequest.setRate(rate);
+        payLoanRequest.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
+        payLoanRequest.setContAcntCode(contAcntCode);
+        payLoanRequest.setContAmount(payLoanRequestDto.getTxnAmount());
+        payLoanRequest.setContRate(rate);
+        payLoanRequest.setContCurCode(Constants.DEFAULT_CUR_CODE);
+        payLoanRequest.setTxnDesc("Зээл хаав");
+        payLoanRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        payLoanRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        payLoanRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
+        payLoanRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
+        List<AspParam> aspParams = Utils.getAspParams(contAcntCode, payLoanRequestDto.getTxnAcntCode(), 13600107);
+        payLoanRequest.setAspParam(aspParams);
+        List<CloseLoanAddParam> addParams = new ArrayList<>();
+        CloseLoanAddParam closeLoanAddParam = new CloseLoanAddParam();
+        closeLoanAddParam.setContAcntType("BAC");
+        closeLoanAddParam.setChkAcntInt("N");
+        addParams.add(closeLoanAddParam);
+        payLoanRequest.setAddParams(addParams);
+        return polarisClient.closeLisingLoan(payLoanRequest);
     }
     // endregion
 

@@ -9,7 +9,8 @@ public class LoanCloseRequest {
 
     @NotEmpty
     private String acntCode;
-
+    @NotEmpty
+    private String companyCode;
     @NotEmpty
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String closeDate;

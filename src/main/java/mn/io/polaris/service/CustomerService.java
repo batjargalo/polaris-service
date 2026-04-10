@@ -42,10 +42,11 @@ public class CustomerService {
     public List<AccountDto> getTdOpenList(AccountListRequest accountListRequest) {
         List<Account> accounts = polarisClient.getAccountList(accountListRequest);
         List<AccountDto> tdOpenList = new ArrayList<>();
+        String company_Code = Constants.COMPANY_CODE;
         for (Account a : accounts) {
             if (a.getStatus().equalsIgnoreCase(Constants.STATUS_OPEN)
                     && a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_TD)) {
-                AccountDto accountDto = convertAccountToAccountDto(a);
+                AccountDto accountDto = convertAccountToAccountDto(a, company_Code);
                 tdOpenList.add(accountDto);
             }
         }
@@ -65,12 +66,22 @@ public class CustomerService {
 
     public List<AccountDto> getLoanOpenList(AccountListRequest accountListRequest) {
         List<Account> accounts = polarisClient.getAccountList(accountListRequest);
+        List<Account> accountsWithLizing = polarisClient.getAccountWithLizingList(accountListRequest);
+
         List<AccountDto> loanOpenList = new ArrayList<>();
         for (Account a : accounts) {
             if (a.getStatus().equalsIgnoreCase(Constants.STATUS_OPEN)
                     && (a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_LOAN)
                             || a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_LINE))) {
-                AccountDto accountDto = convertAccountToAccountDto(a);
+                AccountDto accountDto = convertAccountToAccountDto(a, Constants.COMPANY_CODE);
+                loanOpenList.add(accountDto);
+            }
+        }
+        for (Account a : accountsWithLizing) {
+            if (a.getStatus().equalsIgnoreCase(Constants.STATUS_OPEN)
+                    && (a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_LOAN)
+                            || a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_LINE))) {
+                AccountDto accountDto = convertAccountToAccountDto(a, Constants.COMPANY_CODE_LIZING);
                 loanOpenList.add(accountDto);
             }
         }
@@ -223,9 +234,10 @@ public class CustomerService {
 
     // endregion
 
-    public AccountDto convertAccountToAccountDto(Account a) {
+    public AccountDto convertAccountToAccountDto(Account a, String companyCode) {
         AccountDto accountDto = new AccountDto();
         accountDto.setAcntCode(a.getAcntCode());
+        accountDto.setCompanyCode(companyCode);
         return accountDto;
     }
 
