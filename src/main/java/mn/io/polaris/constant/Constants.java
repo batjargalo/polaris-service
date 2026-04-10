@@ -26,7 +26,7 @@ public class Constants {
         public static final String CUST_LANG_CODE = "1";
         // public static final String DEFAULT_BRANCH_CODE = "10500";
         public static final String COMPANY_CODE = "9999";
-        public static final String COMPANY_CODE_LIZING = "2109";
+        public static final String COMPANY_CODE_LIZING = "2110";
         public static final String DEFAULT_BRANCH_CODE = "999901";
         public static final String DEFAULT_COLL_PROD_CODE = "691100079999";
         public static final String DEFAULT_TD_LOAN_PROD_CODE = "130013009999";
