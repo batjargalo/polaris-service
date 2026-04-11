@@ -9,6 +9,8 @@ public class InfoRequest {
 
     @NotEmpty
     private String acntCode;
+    @NotEmpty
+    private String companyCode;
     @NotNull
     private int getWithSecure;
 

@@ -8,5 +8,7 @@ public class LoanRepaymentRequest {
 
     @NotEmpty
     private String acntCode;
+    @NotEmpty
+    private String companyCode;
 
 }

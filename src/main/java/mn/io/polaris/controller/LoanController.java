@@ -84,6 +84,14 @@ public class LoanController {
     }
     // endregion
 
+    // region ПОЛАРИСРУУ Лизинг ЗЭЭЛ Төлөлт
+    @PostMapping(path = "/lising-pay")
+    @Operation(summary = "Цахим зээл төлөлт")
+    public DepositTdAccountResponseDto payLisingLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {
+        return loanService.payLisingLoan(payLoanRequestDto);
+    }
+    // endregion
+
     // region ПОЛАРИСРУУ Цахим ЗЭЭЛ ЗМС илгээх чек засах
     @PostMapping(path = "/zms-not-send")
     @Operation(summary = "Зээл ЭМС илгээхгүй болгох")
@@ -103,6 +111,14 @@ public class LoanController {
     @Operation(summary = "Зээлийн данс хаах (Бэлэн бус)")
     public DepositTdAccountResponseDto closeDigitalLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {
         return loanService.closeDigitalLoan(payLoanRequestDto);
+    }
+    // endregion
+
+    // region ПОЛАРИСРУУ Лизинг ЗЭЭЛ Хаах
+    @PostMapping(path = "/lising-close")
+    @Operation(summary = "Зээлийн данс хаах (Бэлэн бус)")
+    public DepositTdAccountResponseDto closeLisingLoan(@RequestBody @Valid PayLoanRequestDto payLoanRequestDto) {
+        return loanService.closeLisingLoan(payLoanRequestDto);
     }
     // endregion
 

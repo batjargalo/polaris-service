@@ -9,6 +9,7 @@ import mn.io.polaris.model.polaris.response.BacAcntBalance;
 import mn.io.polaris.model.polaris.response.DepositTdAccountResponseDto;
 import mn.io.polaris.model.request.BacAcntCode;
 import mn.io.polaris.model.request.BetweenAccountsRequestDto;
+import mn.io.polaris.model.request.BetweenAccountsRequestLisingDto;
 import mn.io.polaris.model.request.DepositTdAccountRequestDto;
 import mn.io.polaris.model.request.LoanBetweenAccountsRequestDto;
 import mn.io.polaris.model.request.LoanNonCashRequestDto;
@@ -29,6 +30,9 @@ public class InternalAccountService {
     @Value("${qpay.digital.collect.acc}")
     private String qpayDigitalCollectAcc;
 
+    @Value("${qpay.lising.collect.acc}")
+    private String qpayLisingCollectAcc;
+
     @Value("${qpay.td.acc}")
     private String qpayTdAccount;
 
@@ -37,6 +41,9 @@ public class InternalAccountService {
 
     @Value("${qpay.collect.acc}")
     private String qpayCollectAccount;
+
+    @Value("${qpay.cont.lising.acc}")
+    private String qpayLisingContAccount;
 
     @Value("${cgw.loan.allowance.acc}")
     private String cgwLoanAllowanceAccount;
@@ -100,6 +107,27 @@ public class InternalAccountService {
         betweenAccountsRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
         betweenAccountsRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
         return polarisClient.betweenAccounts(betweenAccountsRequest);
+    }
+
+    public DepositTdAccountResponseDto betweenAccountsLising(
+            BetweenAccountsRequestLisingDto betweenAccountsRequestDto) {
+        BetweenAccountsRequest betweenAccountsRequest = new BetweenAccountsRequest();
+        BigDecimal rate = Constants.DEFAULT_RATE;
+        betweenAccountsRequest.setTxnAcntCode(qpayLisingContAccount);
+        betweenAccountsRequest.setTxnAmount(betweenAccountsRequestDto.getTxnAmount());
+        betweenAccountsRequest.setRate(rate);
+        betweenAccountsRequest.setContAcntCode(qpayLisingCollectAcc);
+        betweenAccountsRequest.setContAmount(betweenAccountsRequestDto.getTxnAmount());
+        betweenAccountsRequest.setContRate(rate);
+        betweenAccountsRequest.setTxnDesc(betweenAccountsRequestDto.getTxnDesc());
+        betweenAccountsRequest.setTcustRegister("test123");
+        betweenAccountsRequest.setTcustRegisterMask("4");
+        betweenAccountsRequest.setRateTypeId(Constants.DEFAULT_RATE_TYPE_ID);
+        betweenAccountsRequest.setSourceType(Constants.DEFAULT_SOURCE_TYPE);
+        betweenAccountsRequest.setIsPreview(Constants.DEFAULT_IS_PREVIEW);
+        betweenAccountsRequest.setIsPreviewFee(Constants.DEFAULT_IS_PREVIEW_FEE);
+        betweenAccountsRequest.setIsTmw(Constants.DEFAULT_IS_TMW);
+        return polarisClient.betweenAccountsLising(betweenAccountsRequest);
     }
 
     // region Digital dotood
