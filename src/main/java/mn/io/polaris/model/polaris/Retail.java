@@ -51,6 +51,39 @@ public class Retail {
     private String shortName;
     private Integer status;
     private String idCardNo;
+    private String familyName;
+    private String familyName2;
+    private String nationalityName;
+    private String nationalityName2;
+    private String fax;
+    private String eduName;
+    private String eduName2;
+    private String ethnicGrpName;
+    private String ethnicGrpName2;
+    private String immovableType;
+    private String brchCode;
+    private String birthPlaceDetail;
+    private String birthPlaceName;
+    private String birthPlaceName2;
+    private String eBarimtNo;
+    private String maritalStatusName;
+    private String maritalStatusName2;
+    private String industryName;
+    private String ownerShip;
+    private Integer birthPlaceId;
+    private Integer titleId;
+    private Integer employmentId;
+    private Integer familyCnt;
+    private Integer industryId;
+    private Integer educationId;
+    private Integer nationalityId;
+    private Integer ethnicGroupId;
+    private Integer slevel;
+    private Integer maritalStatus;
+    private Integer langCode;
+    private Integer totalLoan;
+    private Integer workerCnt;
+    private Integer monthlyIncome;
 
     public String toJsonString() {
         Gson gson = new GsonBuilder()
