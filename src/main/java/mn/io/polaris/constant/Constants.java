@@ -32,11 +32,6 @@ public class Constants {
         public static final String DEFAULT_TD_LOAN_PROD_CODE = "130013009999";
         public static final String DEFAULT_TD_LOAN_PURPOSE_CODE = "PURP00000001";
         public static final String DEFAULT_TD_LOAN_SUB_PURPOSE_CODE = "SUBPURP00001";
-        public static final String DEFAULT_BRANCH_CODE = "10901";
-        public static final String DEFAULT_COLL_PROD_CODE = "691100072100";
-        public static final String DEFAULT_TD_LOAN_PROD_CODE = "130107012100";
-        public static final String DEFAULT_TD_LOAN_PURPOSE_CODE = "2";
-        public static final String DEFAULT_TD_LOAN_SUB_PURPOSE_CODE = "SUBPURP00071";
         public static final Integer DEFAULT_ACNT_MANAGER = 310;
         public static final String DEFAULT_CUR_CODE = "MNT";
         public static final String DEFAULT_S_LEVEL = "1";
