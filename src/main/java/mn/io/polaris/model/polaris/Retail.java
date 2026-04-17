@@ -70,6 +70,7 @@ public class Retail {
     private String maritalStatusName2;
     private String industryName;
     private String ownerShip;
+    private String catId;
     private Integer birthPlaceId;
     private Integer titleId;
     private Integer employmentId;
