@@ -25,13 +25,8 @@ public class Constants {
         public static final String CUST_COUNTRY_CODE = "496";
         public static final String CUST_LANG_CODE = "1";
         // public static final String DEFAULT_BRANCH_CODE = "10500";
-        public static final String COMPANY_CODE = "9999";
-        public static final String COMPANY_CODE_LIZING = "2110";
-        public static final String DEFAULT_BRANCH_CODE = "999901";
-        public static final String DEFAULT_COLL_PROD_CODE = "691100079999";
-        public static final String DEFAULT_TD_LOAN_PROD_CODE = "130013009999";
-        public static final String DEFAULT_TD_LOAN_PURPOSE_CODE = "PURP00000001";
-        public static final String DEFAULT_TD_LOAN_SUB_PURPOSE_CODE = "SUBPURP00001";
+        public static final String COMPANY_CODE = "2100";
+        public static final String COMPANY_CODE_LIZING = "2109";
         public static final String DEFAULT_BRANCH_CODE = "10901";
         public static final String DEFAULT_COLL_PROD_CODE = "691100072100";
         public static final String DEFAULT_TD_LOAN_PROD_CODE = "130107012100";
