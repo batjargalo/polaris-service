@@ -92,6 +92,8 @@ public class InternalAccountService {
             betweenAccountsRequest.setTxnAcntCode(qpayDANAccount);
         } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.LIMIT)) {
             betweenAccountsRequest.setTxnAcntCode(qpayDigitalCollectAcc);
+        } else if (betweenAccountsRequestDto.getTxnType().equals(BetweenAccountsRequestDto.TxnType.DIGITAL)) {
+            betweenAccountsRequest.setTxnAcntCode(qpayKhaanAccount);
         }
         betweenAccountsRequest.setTxnAmount(betweenAccountsRequestDto.getTxnAmount());
         betweenAccountsRequest.setRate(rate);
