@@ -11,7 +11,6 @@ import mn.io.polaris.model.polaris.request.GetLoanBillListParams2;
 import mn.io.polaris.model.polaris.request.GetLoanList;
 import mn.io.polaris.model.polaris.request.GetLoanListCust;
 import mn.io.polaris.model.polaris.request.GetLoanListParams;
-import mn.io.polaris.model.polaris.request.GetLoanListProd;
 import mn.io.polaris.model.polaris.response.LoanAcntBillListResponse;
 import mn.io.polaris.model.polaris.response.LoanAcntListResponse;
 import mn.io.polaris.model.request.*;
@@ -20,21 +19,21 @@ import mn.io.polaris.model.response.LoanAccountBalance;
 import mn.io.polaris.model.response.LoanAccountBill;
 import mn.io.polaris.remote.PolarisClient;
 
-import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Map;
 
 @Log4j2
 @Service
 public class CustomerService {
+
+    @Value("${arcv.prodcode}")
+    private String arcvProdCode;
 
     @Resource
     private PolarisClient polarisClient;
@@ -52,6 +51,33 @@ public class CustomerService {
         }
         return tdOpenList;
     }
+
+    // region Нээлттэй авлагын дансны жагсаалт Munkh
+    public List<Account> getArcvOpen(@Valid ArcvAccountRequest accountListRequest) {
+        RestTemplate restTemplate = new RestTemplate();
+        List<Account> accounts = polarisClient.getArcvAccountList(accountListRequest);
+        List<Account> arcvOpenList = new ArrayList<>();
+        for (Account a : accounts) {
+            if (a.getStatus().equalsIgnoreCase(Constants.STATUS_OPEN)
+                    && a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_ARCV)
+                    && a.getProdCode().equalsIgnoreCase(arcvProdCode)) {
+                arcvOpenList.add(a);
+            }
+        }
+        if (arcvOpenList.isEmpty()) {
+
+        } else {
+            for (Account acc : arcvOpenList) {
+                String response = restTemplate.getForObject(
+                        "http://202.131.237.58:5015/oiapi/arcv/v1.0.0/getAccountDetail?nes_session=pWnefLLslnpbKs0fW6QF82Sb1B6SvY&role_id=45&company_code=7009&{getId}",
+                        String.class,
+                        acc.getAcntCode());
+            }
+        }
+        return arcvOpenList;
+    }
+    // endregion
+
     // region Нээлттэй харилцах дансны жагсаалт Munkh
 
     public List<Account> getCasaOpenList(@Valid AccountListRequest accountListRequest) {

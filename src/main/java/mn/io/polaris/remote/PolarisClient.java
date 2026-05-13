@@ -107,6 +107,24 @@ public class PolarisClient {
         }
     }
 
+    // Arcv acnt
+    public List<Account> getArcvAccountList(ArcvAccountRequest accountListRequest) {
+        List<Object> array = new ArrayList<>();
+        array.add(accountListRequest.getCustCode());
+        array.add(accountListRequest.getPageNumber());
+        array.add(accountListRequest.getPageSize());
+        HttpHeaders headers = setPolarisHeaders();
+        headers.add("op", "13610312");
+        String responseBody = sendRequest(createHttpEntity(array, headers));
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(responseBody, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+
     // With Lizing
     public List<Account> getAccountWithLizingList(AccountListRequest accountListRequest) {
         List<Object> array = new ArrayList<>();

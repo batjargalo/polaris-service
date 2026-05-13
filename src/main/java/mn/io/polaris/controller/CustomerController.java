@@ -40,6 +40,14 @@ public class CustomerController {
     }
     // endregion
 
+    // region Нээлттэй Авлагын дансны жагсаалт Munkh
+    @PostMapping(path = "/arcv/open")
+    @Operation(summary = "Нээлттэй авлагын дансны жагсаалт")
+    public List<Account> getArcvOpen(@RequestBody @Valid ArcvAccountRequest accountListRequest) {
+        return customerService.getArcvOpen(accountListRequest);
+    }
+    // endregion
+
     @PostMapping(path = "/td/history")
     @Operation(summary = "Нээлттэй бус хадгаламжийн дансны жагсаалт")
     public List<Account> getTdNotOpenList(@RequestBody @Valid AccountListRequest accountListRequest) {
