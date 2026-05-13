@@ -5,11 +5,11 @@ target/
 !**/src/test/**/target/
 
 #Application Properties (Sensitive!)
-application.properties
+**/application.properties
 
-application.yml
+**/application.yml
 
-application-*.properties
+**/application-*.properties
 **/Constant.java
 
 ### STS ###
