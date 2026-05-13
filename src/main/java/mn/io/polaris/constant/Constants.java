@@ -12,7 +12,7 @@ public class Constants {
 
         public static final String STATUS_OPEN = "O";
         public static final String ACCOUNT_TYPE_TD = "TD";
-        public static final String ACCOUNT_TYPE_ARCV = "ARCV1";
+        public static final String ACCOUNT_TYPE_ARCV = "ARCV";
         public static final String ACCOUNT_TYPE_LOAN = "LOAN";
         public static final String ACCOUNT_TYPE_LINE = "LINE";
         public static final Integer RETAIL_ADDRESS_MAIN = 1;
