@@ -8,6 +8,7 @@ target/
 src/main/resources/application.properties
 src/main/resources/application.yml
 src/main/java/mn/io/polaris/constant/Constants.java
+**/Constants.java
 
 ### STS ###
 .apt_generated
