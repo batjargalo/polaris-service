@@ -5,12 +5,9 @@ target/
 !**/src/test/**/target/
 
 #Application Properties (Sensitive!)
-**/application.properties
-
-**/application.yml
-
-**/application-*.properties
-**/Constant.java
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/main/java/mn/io/polaris/constant/Constant.java
 
 ### STS ###
 .apt_generated
