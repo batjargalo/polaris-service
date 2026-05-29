@@ -21,6 +21,7 @@ import mn.io.polaris.model.polaris.response.LoanExtendPResponse;
 import mn.io.polaris.model.polaris.response.ParameterResponse;
 import mn.io.polaris.model.polaris.response.TempAccount;
 import mn.io.polaris.model.request.*;
+import mn.io.polaris.model.response.ArcvNonCashResponse;
 import mn.io.polaris.model.response.LoanAccountBalance;
 import mn.io.polaris.model.response.LoanExtensionResponse;
 import mn.io.polaris.repository.PolarisDaoRepository;
@@ -28,6 +29,8 @@ import mn.io.polaris.repository.SystemDaoRepository;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -41,6 +44,9 @@ import java.util.*;
 @Service
 public class PolarisClient {
 
+    @Value("${arcv.prodcode}")
+    private String arcvProdCode;
+
     @Resource
     private SystemDaoRepository systemDaoRepository;
 
@@ -49,6 +55,11 @@ public class PolarisClient {
 
     private String getPolarisUrl() {
         SystemDao systemDao = systemDaoRepository.findById("POLARIS_URL").orElseThrow();
+        return systemDao.getValue();
+    }
+
+    private String getPolarisApiUrl() {
+        SystemDao systemDao = systemDaoRepository.findById("POLARIS_API_URL").orElseThrow();
         return systemDao.getValue();
     }
 
@@ -510,6 +521,62 @@ public class PolarisClient {
         headers.add("op", "13610318");
         sendRequest(createHttpEntity(array, headers));
     }
+
+    // region Авлага модуль дансны жагсаалт Munkh
+
+    public AccountArcv getArcvOpen(ArcvAccountRequest arcvAccountRequest) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpMethod method = HttpMethod.GET;
+        Map<String, Object> params = new HashMap<>();
+        params.put("getId", arcvAccountRequest.getCustCode());
+        String url = getPolarisApiUrl() + "cif/v1.0.0/" + "getCustomerAcntList?" + "company_code=" + getCompany()
+                + "&role_id=" + getRole()
+                + "&nes_session=" + getCookie() + "&getId=" + arcvAccountRequest.getCustCode();
+        // "http://202.131.237.58:5015/oiapi/cif/v1.0.0/getCustomerAcntList?nes_session=pWnefLLslnpbKs0fW6QF82Sb1B6SvY&role_id=45&company_code=7009&getId={getId}"
+
+        System.out.println(url);
+        ResponseEntity<List<Account>> responseEntity = restTemplate.exchange(
+                url,
+                method,
+                null,
+                new ParameterizedTypeReference<List<Account>>() {
+                });
+
+        List<Account> accounts = responseEntity.getBody();
+        AccountArcv retAcc = new AccountArcv();
+        List<Account> arcvOpenList = new ArrayList<>();
+        for (Account a : accounts) {
+            if (a.getStatus().equalsIgnoreCase(Constants.STATUS_OPEN)
+                    // && a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_ARCV)
+                    && a.getProdCode().equalsIgnoreCase(arcvProdCode)) {
+                arcvOpenList.add(a);
+            }
+        }
+        if (arcvOpenList.isEmpty()) {
+            return retAcc;
+        } else {
+            for (Account acc : arcvOpenList) {
+                String url2 = getPolarisApiUrl() + "arcv/v1.0.0/" + "getAccountDetail?" + "company_code="
+                        + getCompany()
+                        + "&role_id=" + getRole()
+                        + "&nes_session=" + getCookie() + "&getId=" + acc.getAcntCode();
+                System.out.println(url2);
+                AccountArcv response = restTemplate.getForObject(
+                        url2,
+                        AccountArcv.class);
+                log.info(response);
+                Objects.requireNonNull(response, "Response объект null байж болохгүй!");
+                if (response.getRelAcntCode().equalsIgnoreCase(arcvAccountRequest.getAcntCode())) {
+                    retAcc.setPrincipal(response.getPrincipal());
+                    retAcc.setRelAcntCode(response.getRelAcntCode());
+                    retAcc.setAcntCode(response.getAcntCode());
+                }
+            }
+        }
+        System.out.println(retAcc);
+        return retAcc;
+    }
+    // endregion
 
     public String sendRequest(HttpEntity<String> entity) {
         PolarisDao polarisDao = new PolarisDao();
@@ -1243,6 +1310,22 @@ public class PolarisClient {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
         return pledge;
+    }
+
+    // region Авлагийн Гүйлгээ Бэлэн Бус
+    public ArcvNonCashResponse payArcvTransaction(ArcvNonCashRequest arcvNonCashPayRequest) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = getPolarisApiUrl() + "arcv/v1.0.0/" + "paymentNonCash?" + "company_code="
+                + getCompany()
+                + "&role_id=" + getRole()
+                + "&nes_session=" + getCookie();
+        // "http://202.131.237.58:5015/oiapi/arcv/v1.0.0/paymentNonCash?nes_session=pWnefLLslnpbKs0fW6QF82Sb1B6SvY&role_id=45&company_code=7009"
+        System.out.println(url);
+        ResponseEntity<ArcvNonCashResponse> response = restTemplate.postForEntity(
+                url,
+                arcvNonCashPayRequest, // ✅ Your DTO as body
+                ArcvNonCashResponse.class);
+        return response.getBody();
     }
 
 }

@@ -20,12 +20,17 @@ import mn.io.polaris.model.response.LoanAccountBill;
 import mn.io.polaris.remote.PolarisClient;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Log4j2
@@ -53,28 +58,10 @@ public class CustomerService {
     }
 
     // region Нээлттэй авлагын дансны жагсаалт Munkh
-    public List<Account> getArcvOpen(@Valid ArcvAccountRequest accountListRequest) {
-        RestTemplate restTemplate = new RestTemplate();
-        List<Account> accounts = polarisClient.getArcvAccountList(accountListRequest);
-        List<Account> arcvOpenList = new ArrayList<>();
-        for (Account a : accounts) {
-            if (a.getStatus().equalsIgnoreCase(Constants.STATUS_OPEN)
-                    && a.getAcntType().equalsIgnoreCase(Constants.ACCOUNT_TYPE_ARCV)
-                    && a.getProdCode().equalsIgnoreCase(arcvProdCode)) {
-                arcvOpenList.add(a);
-            }
-        }
-        if (arcvOpenList.isEmpty()) {
-
-        } else {
-            for (Account acc : arcvOpenList) {
-                String response = restTemplate.getForObject(
-                        "http://202.131.237.58:5015/oiapi/arcv/v1.0.0/getAccountDetail?nes_session=pWnefLLslnpbKs0fW6QF82Sb1B6SvY&role_id=45&company_code=7009&{getId}",
-                        String.class,
-                        acc.getAcntCode());
-            }
-        }
-        return arcvOpenList;
+    public AccountArcv getArcvOpen(@Valid ArcvAccountRequest accountListRequest) {
+        AccountArcv retAcc = new AccountArcv();
+        retAcc = polarisClient.getArcvOpen(accountListRequest);
+        return retAcc;
     }
     // endregion
 
