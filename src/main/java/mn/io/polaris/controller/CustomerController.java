@@ -43,7 +43,7 @@ public class CustomerController {
     // region Нээлттэй Авлагын дансны жагсаалт Munkh
     @PostMapping(path = "/arcv/open")
     @Operation(summary = "Нээлттэй авлагын дансны жагсаалт")
-    public List<Account> getArcvOpen(@RequestBody @Valid ArcvAccountRequest accountListRequest) {
+    public AccountArcv getArcvOpen(@RequestBody @Valid ArcvAccountRequest accountListRequest) {
         return customerService.getArcvOpen(accountListRequest);
     }
     // endregion
