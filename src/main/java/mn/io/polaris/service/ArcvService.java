@@ -48,17 +48,17 @@ public class ArcvService {
 
         ArcvNonCashRequest arcvNonCashRequest = new ArcvNonCashRequest();
         arcvNonCashRequest.setTxnAcntCode(arcvNonCashPayRequest.getAcntCode());
-        arcvNonCashRequest.setContAcntType("EXPENSE");
+        arcvNonCashRequest.setContAcntType("BAC");
         arcvNonCashRequest.setContAcntCode(qpayLoanAccount);
         arcvNonCashRequest.setTxnDesc(arcvNonCashPayRequest.getTxnDesc());
         arcvNonCashRequest.setRate(1);
-        arcvNonCashRequest.setRateTypeId("46");
+        arcvNonCashRequest.setRateTypeId("5");
         arcvNonCashRequest.setContAmount(arcvNonCashPayRequest.getTxnAmount());
         arcvNonCashRequest.setTxnAmount(arcvNonCashPayRequest.getTxnAmount());
         arcvNonCashRequest.setCurCode("MNT");
         arcvNonCashRequest.setContSysNo(1301);
         arcvNonCashRequest.setTxnSysNo(1326);
-        arcvNonCashRequest.setContRate(0);
+        arcvNonCashRequest.setContRate(1);
         arcvNonCashRequest.setIsTmw(1);
         arcvNonCashRequest.setIdentityType("MANUAL");
         arcvNonCashRequest.setTcustType(0);
